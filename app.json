@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "MoJakGyo",
-    "slug": "MoJakGyo",
+    "name": "mojakgyo",
+    "slug": "mojakgyo",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
