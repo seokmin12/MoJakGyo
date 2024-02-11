@@ -10,6 +10,10 @@ function Message() {
         'BlackHanSans': require('./assets/fonts/BlackHanSans-Regular.ttf'),
     });
 
+    if (!fontsLoaded) {
+        return <StatusBar />;
+    }
+
     const result = [];
 
     for(let i = 0; i < 20; i++) {
@@ -20,7 +24,7 @@ function Message() {
                 </View>
                 <View style={styles.MessageContent}>
                     <Text style={styles.MessageCaller}>이석민</Text>
-                    <Text>안녕?</Text>
+                    <Text style={styles.MessageDesc}>안녕하세요</Text>
                 </View>
             </View>
         )
@@ -94,5 +98,9 @@ const styles = StyleSheet.create({
     MessageCaller: {
         fontFamily: 'BlackHanSans',
         fontWeight: 'bold',
+    },
+
+    MessageDesc: {
+        color: '#A0A0A0',
     },
 })

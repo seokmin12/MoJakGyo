@@ -8,15 +8,12 @@ import { useFonts } from 'expo-font';
 import ContentsScreen from './ContentsScreen.js';
 import ProfileScreen from './ProfileScreen.js';
 import MessageScreen from './MessageScreen.js';
+import MarketScreen from './MarketScreen.js';
 
 const Tab = createBottomTabNavigator();
 
 function UploadScreen() {
   return <Text>Upload</Text>;
-}
-
-function MarketScreen() {
-  return <Text>Market</Text>;
 }
 
 export default function App() {
