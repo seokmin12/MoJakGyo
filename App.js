@@ -1,25 +1,35 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Image, ScrollView, SafeAreaView } from 'react-native';
-import Contents from '../mojakgyo/Contents.js';
 import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useFonts } from 'expo-font';
+
+import ContentsScreen from './ContentsScreen.js';
+import ProfileScreen from './ProfileScreen.js';
+import MessageScreen from './MessageScreen.js';
 
 const Tab = createBottomTabNavigator();
 
-function SearchScreen() {
-  return <Text>Search</Text>;
+function UploadScreen() {
+  return <Text>Upload</Text>;
 }
 
 function MarketScreen() {
   return <Text>Market</Text>;
 }
 
-function ProfileScreen() {
-  return <Text>Profile</Text>;
-}
-
 export default function App() {
+  const [fontsLoaded] = useFonts({
+    'BlackHanSans': require('./assets/fonts/BlackHanSans-Regular.ttf'),
+  });
+  
+  if (!fontsLoaded) {
+    return <StatusBar />;
+  }
+  
+
+
   return (
     <SafeAreaView style={styles.container}>
       <NavigationContainer>
@@ -32,7 +42,7 @@ export default function App() {
         >
           <Tab.Screen 
             name='Home'
-            component={Contents}
+            component={ContentsScreen}
             options={{
               title: '홈',
               tabBarIcon: ({size, focused}) => (
@@ -45,15 +55,29 @@ export default function App() {
           />
 
           <Tab.Screen
-            name='Search'
-            component={SearchScreen}
+            name='Message'
+            component={MessageScreen}
             options={{
-              title: '검색',
+              title: '메시지',
               tabBarIcon: ({size, focused}) => (
                 focused ? 
-                <Icon name="compass" size={size} />
+                <Icon name="email-fast" size={size} />
                 :
-                <Icon name="compass-outline" size={size} />
+                <Icon name="email-fast-outline" size={size} />
+              ),
+            }}
+          />
+
+          <Tab.Screen
+            name='Upload'
+            component={UploadScreen}
+            options={{
+              title: '업로드',
+              tabBarIcon: ({size, focused}) => (
+                focused ? 
+                <Icon name="camera-plus" size={size} />
+                :
+                <Icon name="camera-plus-outline" size={size} />
               ),
             }}
           />

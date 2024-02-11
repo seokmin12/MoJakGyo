@@ -1,13 +1,12 @@
 import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity } from 'react-native';
 import Profile from '../mojakgyo/assets/images/DSC03437.jpg';
-import Picture from '../mojakgyo/assets/images/DSC_0482.jpg'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useFonts } from 'expo-font';
 import { useState } from 'react';
 
-export default function Contents() {
+export default function ContentsScreen() {
     const [fontsLoaded] = useFonts({
-        'BlackHanSans-Regular': require('./assets/fonts/BlackHanSans-Regular.ttf'),
+        'BlackHanSans': require('./assets/fonts/BlackHanSans-Regular.ttf'),
     });
 
     const [Likes, SetLikes] = useState(false);
@@ -27,26 +26,32 @@ export default function Contents() {
       <View style={ContentsStyles.container} key={i}>
       <View style={ContentsStyles.header}>
         <View style={ContentsStyles.ProfileSide}>
-          <Image source={Profile} style={ContentsStyles.profile} />
+            <View style={ContentsStyles.ProfileAspect}>
+                <Image source={Profile} style={ContentsStyles.profile} />
+            </View>
           <Text style={ContentsStyles.font}>이석민</Text>
         </View>
-        <Icon name="dots-horizontal" size={20} />
+        <TouchableOpacity>
+            <Icon name="dots-horizontal" size={20} />
+        </TouchableOpacity>
       </View>
 
       <View style={ContentsStyles.contents}>
-        <Image source={Picture} style={ContentsStyles.ContentsImg} />
+        {/* <Image source={Picture} style={ContentsStyles.ContentsImg} /> */}
       </View>
       <View style={ContentsStyles.footer}>
         <View style={ContentsStyles.reaction}>
           <View style={{alignItems: 'center'}}>
-            <TouchableOpacity onPress={() => ToggleLikes()}>
+            <TouchableOpacity style={{alignItems: 'center'}} onPress={() => ToggleLikes()}>
                 <Icon name={Likes ? 'thumb-up' : 'thumb-up-outline'} size={25} color={Likes ? '#A1D15C' : '#000000'} />
+                <Text style={{fontSize: 10}}>10k</Text>
             </TouchableOpacity>
-            <Text style={{fontSize: 10}}>10k</Text>
           </View>
           <View style={{alignItems: 'center'}}>
-            <Icon name='comment-outline' size={25} />
-            <Text style={{fontSize: 10}}>10k</Text>
+            <TouchableOpacity style={{alignItems: 'center'}}>
+                <Icon name='briefcase-plus-outline' size={25} />
+                <Text style={{fontSize: 10}}>섭외하기</Text>
+            </TouchableOpacity>
           </View>         
         </View>
         <TouchableOpacity onPress={() => ToggleBookMark()}>
@@ -57,8 +62,13 @@ export default function Contents() {
     )
   }
   return (
-    <View style={{backgroundColor: '#fff'}}>
-        <Text style={ContentsStyles.title}>모작교</Text>
+    <View style={{backgroundColor: '#fff', flex: 1,}}>
+        <View style={ContentsStyles.TitleHeader}>
+            <Text style={ContentsStyles.title}>모작교</Text>
+            <TouchableOpacity>
+                <Icon name='bell-outline' size={26} />
+            </TouchableOpacity>
+        </View>
         <ScrollView>
             {result}
         </ScrollView>
@@ -68,6 +78,7 @@ export default function Contents() {
 
 const ContentsStyles = StyleSheet.create({
     container: {
+      flex: 1,
       backgroundColor: '#fff',
       padding: 10,
       display: 'flex',
@@ -87,9 +98,16 @@ const ContentsStyles = StyleSheet.create({
       alignItems: 'center',
       gap: 10,
     },
+
+    ProfileAspect: {
+        aspectRatio: 1,
+        width: '25%',
+        backgroundColor: '#ccc',
+        borderRadius: 1000,
+    },
   
     profile: {
-      width: '25%',
+      width: '100%',
       height: undefined,
       aspectRatio: 1,
       borderRadius: 1000,
@@ -123,15 +141,22 @@ const ContentsStyles = StyleSheet.create({
       alignItems: 'center',
       gap: 30,
     },
+
+    TitleHeader: {
+        padding: 10,
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+    },
     
     title: {
-        padding: 10,
-        fontFamily: 'BlackHanSans-Regular',
+        fontFamily: 'BlackHanSans',
         fontSize: 31,
         fontWeight: 'bold',
     },
 
     font: {
-        fontFamily: 'BlackHanSans-Regular',
+        fontFamily: 'BlackHanSans',
     },
 });
