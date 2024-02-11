@@ -5,13 +5,13 @@ import React from 'react';
 
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import Profile from '../mojakgyo/assets/images/DSC03437.jpg';
+import Profile from '../assets/images/DSC03437.jpg';
 
-import PostDetailScreen from './PostDetailScreen';
+import PostDetailScreen from './detail/PostDetailScreen';
 
 export function ProfileScreen({ navigation }) {
     const [fontsLoaded] = useFonts({
-        'BlackHanSans': require('./assets/fonts/BlackHanSans-Regular.ttf'),
+        'BlackHanSans': require('../assets/fonts/BlackHanSans-Regular.ttf'),
     });
 
     if (!fontsLoaded) {

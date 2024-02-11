@@ -1,19 +1,14 @@
-import { StyleSheet, Text, View, Image, FlatList, TouchableOpacity, RefreshControl, ScrollView, Button, Pressable } from 'react-native';
+import { View } from 'react-native';
 import { useFonts } from 'expo-font';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import React from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { useState } from 'react';
-
-import Profile from '../mojakgyo/assets/images/DSC03437.jpg';
-import Picture from './assets/images/DSC_0482.jpg';
 
 import { GoBackBtn } from './MarketDetailScreen';
-import { PostScreen, styles } from './ContentsScreen';
+import { PostScreen, styles } from '../ContentsScreen';
 
 export default function PostDetailScreen({ route }) {
     const [fontsLoaded] = useFonts({
-        'BlackHanSans': require('./assets/fonts/BlackHanSans-Regular.ttf'),
+        'BlackHanSans': require('../../assets/fonts/BlackHanSans-Regular.ttf'),
     });
 
     if (!fontsLoaded) {

@@ -2,10 +2,9 @@ import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity, FlatList, 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useFonts } from 'expo-font';
 import { useState, useCallback } from 'react';
-// import React from 'react';
 
-import Profile from '../mojakgyo/assets/images/DSC03437.jpg';
-import Picture from './assets/images/DSC_0482.jpg';
+import Profile from '../assets/images/DSC03437.jpg';
+import Picture from '../assets/images/DSC_0482.jpg';
 
 export const PostScreen = (props) => {
   const [Likes, SetLikes] = useState(false);
@@ -27,7 +26,6 @@ export const PostScreen = (props) => {
                 <Image source={Profile} style={styles.profile} />
             </View>
           <Text style={styles.font}>이석민</Text>
-          {/* <Text>{keys}</Text> */}
         </View>
         <TouchableOpacity>
             <Icon name="dots-horizontal" size={20} />
@@ -70,7 +68,7 @@ const itemData = [
 
 export default function ContentsScreen() {
   const [fontsLoaded] = useFonts({
-    'BlackHanSans': require('./assets/fonts/BlackHanSans-Regular.ttf'),
+    'BlackHanSans': require('../assets/fonts/BlackHanSans-Regular.ttf'),
   });
 
   if (!fontsLoaded) {
@@ -86,12 +84,6 @@ export default function ContentsScreen() {
       }, 2000);
   }, []);
 
-  const result = [];
-  // for(let i = 100; i < 105; i++) {
-  //   result.push(
-  //     <PostScreen keys={i} />
-  //   )
-  // }
   return (
     <View style={{backgroundColor: '#fff', flex: 1,}}>
         <View style={styles.TitleHeader}>

@@ -1,14 +1,13 @@
-import { StyleSheet, Text, View, Image, FlatList, TouchableOpacity, RefreshControl, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, Image, FlatList, TouchableOpacity, RefreshControl } from 'react-native';
 import { useFonts } from 'expo-font';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import React from 'react';
 
-import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import ProductImg from './assets/images/DSC_0482.jpg';
+import ProductImg from '../assets/images/DSC_0482.jpg';
 
-import MarketDetailScreen from './MarketDetailScreen';
+import MarketDetailScreen from './detail/MarketDetailScreen';
 
 const itemData = [
     {   
@@ -61,7 +60,7 @@ const itemData = [
 
 export function MarketScreen({ navigation }) {
     const [fontsLoaded] = useFonts({
-        'BlackHanSans': require('./assets/fonts/BlackHanSans-Regular.ttf'),
+        'BlackHanSans': require('../assets/fonts/BlackHanSans-Regular.ttf'),
     });
 
     if (!fontsLoaded) {

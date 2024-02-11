@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, FlatList, TouchableOpacity, RefreshControl, ScrollView, Button, Pressable } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Pressable } from 'react-native';
 import { useFonts } from 'expo-font';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import React from 'react';
@@ -60,7 +60,7 @@ Non quam lacus suspendisse faucibus interdum. Donec pretium vulputate sapien nec
 
 export default function MarketDetailScreen({ route }) {
     const [fontsLoaded] = useFonts({
-        'BlackHanSans': require('./assets/fonts/BlackHanSans-Regular.ttf'),
+        'BlackHanSans': require('../../assets/fonts/BlackHanSans-Regular.ttf'),
     });
 
     if (!fontsLoaded) {

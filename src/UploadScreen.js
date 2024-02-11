@@ -1,10 +1,8 @@
-import { StyleSheet, Text, View, Image, FlatList, TouchableOpacity, RefreshControl, ScrollView, Pressable } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, Pressable } from 'react-native';
 import { useFonts } from 'expo-font';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import * as ImagePicker from 'expo-image-picker';
-import ImageResizer from "react-native-image-resizer";
 
 export function ImageViewer({ selectedImage }) {
     const imageSource = { uri: selectedImage }
@@ -23,7 +21,7 @@ const CustomButton = ({label, onPress}) => {
 
 export default function UploadScreen() {
     const [fontsLoaded] = useFonts({
-        'BlackHanSans': require('./assets/fonts/BlackHanSans-Regular.ttf'),
+        'BlackHanSans': require('../assets/fonts/BlackHanSans-Regular.ttf'),
     });
 
     if (!fontsLoaded) {

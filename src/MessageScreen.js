@@ -1,13 +1,12 @@
-import { StyleSheet, Text, View, Image, FlatList, TouchableOpacity, RefreshControl, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, Image, ScrollView } from 'react-native';
 import { useFonts } from 'expo-font';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import React from 'react';
 
-import Profile from '../mojakgyo/assets/images/DSC03437.jpg';
+import Profile from '../assets/images/DSC03437.jpg';
 
 function Message() {
     const [fontsLoaded] = useFonts({
-        'BlackHanSans': require('./assets/fonts/BlackHanSans-Regular.ttf'),
+        'BlackHanSans': require('../assets/fonts/BlackHanSans-Regular.ttf'),
     });
 
     if (!fontsLoaded) {

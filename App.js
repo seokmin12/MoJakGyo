@@ -1,22 +1,20 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Image, ScrollView, SafeAreaView } from 'react-native';
+import { StyleSheet, SafeAreaView } from 'react-native';
 
 import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useFonts } from 'expo-font';
 
-import ContentsScreen from './ContentsScreen.js';
-import ProfileScreen from './ProfileScreen.js';
-import MessageScreen from './MessageScreen.js';
-import MarketScreen from './MarketScreen.js';
-import UploadScreen from './UploadScreen.js';
+import ContentsScreen from './src/ContentsScreen.js';
+import ProfileScreen from './src/ProfileScreen.js';
+import MessageScreen from './src/MessageScreen.js';
+import MarketScreen from './src/MarketScreen.js';
+import UploadScreen from './src/UploadScreen.js';
 
 
 const Tab = createBottomTabNavigator();
-const Stack = createNativeStackNavigator();
 
 export default function App() {
   const [fontsLoaded] = useFonts({
