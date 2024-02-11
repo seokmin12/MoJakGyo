@@ -13,7 +13,7 @@ const CustomBtn = ({label, onPress}) => {
     )
 }
 
-function GoBackBtn({onPress}) {
+export function GoBackBtn({onPress}) {
     return (
         <Pressable onPress={onPress}>
             <Icon name='chevron-left' size={31} color="#000" />

@@ -102,14 +102,14 @@ export function MarketScreen({ navigation }) {
                 </TouchableOpacity>
             </View>
             <FlatList
-                    data={itemData}
-                    refreshControl={
-                        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-                    }
-                    numColumns={2}
-                    renderItem={Product}
-                    keyExtractor={(item) => item.idx}
-                />
+                data={itemData}
+                refreshControl={
+                    <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                }
+                numColumns={2}
+                renderItem={Product}
+                keyExtractor={(item) => item.idx}
+            />
         </View>
     )
 }

@@ -1,47 +1,44 @@
-import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity } from 'react-native';
-import Profile from '../mojakgyo/assets/images/DSC03437.jpg';
-import Picture from './assets/images/DSC_0482.jpg'
+import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity, FlatList, RefreshControl } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useFonts } from 'expo-font';
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
+// import React from 'react';
 
-export default function ContentsScreen() {
-    const [fontsLoaded] = useFonts({
-        'BlackHanSans': require('./assets/fonts/BlackHanSans-Regular.ttf'),
-    });
+import Profile from '../mojakgyo/assets/images/DSC03437.jpg';
+import Picture from './assets/images/DSC_0482.jpg';
 
-    const [Likes, SetLikes] = useState(false);
-    const [BookMark, SetBookMark] = useState(false);
+export const PostScreen = (props) => {
+  const [Likes, SetLikes] = useState(false);
+  const [BookMark, SetBookMark] = useState(false);
 
-    const ToggleLikes = () => {
-        SetLikes(!Likes);
-    };
+  const ToggleLikes = () => {
+      SetLikes(!Likes);
+  };
 
-    const ToggleBookMark = () => {
-        SetBookMark(!BookMark);
-    }
+  const ToggleBookMark = () => {
+      SetBookMark(!BookMark);
+  }
 
-  const result = [];
-  for(let i = 0; i < 5; i++) {
-    result.push(
-      <View style={ContentsStyles.container} key={i}>
-      <View style={ContentsStyles.header}>
-        <View style={ContentsStyles.ProfileSide}>
-            <View style={ContentsStyles.ProfileAspect}>
-                <Image source={Profile} style={ContentsStyles.profile} />
+  return (
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <View style={styles.ProfileSide}>
+            <View style={styles.ProfileAspect}>
+                <Image source={Profile} style={styles.profile} />
             </View>
-          <Text style={ContentsStyles.font}>이석민</Text>
+          <Text style={styles.font}>이석민</Text>
+          {/* <Text>{keys}</Text> */}
         </View>
         <TouchableOpacity>
             <Icon name="dots-horizontal" size={20} />
         </TouchableOpacity>
       </View>
 
-      <View style={ContentsStyles.contents}>
-        <Image source={Picture} style={ContentsStyles.ContentsImg} />
+      <View style={styles.contents}>
+        <Image source={Picture} style={styles.ContentsImg} />
       </View>
-      <View style={ContentsStyles.footer}>
-        <View style={ContentsStyles.reaction}>
+      <View style={styles.footer}>
+        <View style={styles.reaction}>
           <View style={{alignItems: 'center'}}>
             <TouchableOpacity style={{alignItems: 'center'}} onPress={() => ToggleLikes()}>
                 <Icon name={Likes ? 'thumb-up' : 'thumb-up-outline'} size={25} color={Likes ? '#0070F2' : '#000000'} />
@@ -60,24 +57,65 @@ export default function ContentsScreen() {
         </TouchableOpacity>
       </View>
     </View>
-    )
+  )
+}
+
+const itemData = [
+  {
+    idx: 100,
+  }, {
+    idx: 200,
   }
+]
+
+export default function ContentsScreen() {
+  const [fontsLoaded] = useFonts({
+    'BlackHanSans': require('./assets/fonts/BlackHanSans-Regular.ttf'),
+  });
+
+  if (!fontsLoaded) {
+      return <StatusBar />;
+  }
+
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = useCallback(() => {
+      setRefreshing(true);
+      setTimeout(() => {
+      setRefreshing(false);
+      }, 2000);
+  }, []);
+
+  const result = [];
+  // for(let i = 100; i < 105; i++) {
+  //   result.push(
+  //     <PostScreen keys={i} />
+  //   )
+  // }
   return (
     <View style={{backgroundColor: '#fff', flex: 1,}}>
-        <View style={ContentsStyles.TitleHeader}>
-            <Text style={ContentsStyles.title}>모작교</Text>
+        <View style={styles.TitleHeader}>
+            <Text style={styles.title}>모작교</Text>
             <TouchableOpacity>
                 <Icon name='bell-outline' size={26} />
             </TouchableOpacity>
         </View>
-        <ScrollView>
-            {result}
+        <ScrollView
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+        >
+            {
+              itemData.map((item, index) => 
+                <PostScreen key={index} />
+              )
+            }
         </ScrollView>
     </View>
   );
 }
 
-const ContentsStyles = StyleSheet.create({
+export const styles = StyleSheet.create({
     container: {
       flex: 1,
       backgroundColor: '#fff',

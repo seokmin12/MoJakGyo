@@ -3,9 +3,13 @@ import { useFonts } from 'expo-font';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import React from 'react';
 
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
 import Profile from '../mojakgyo/assets/images/DSC03437.jpg';
 
-export default function ProfileScreen() {
+import PostDetailScreen from './PostDetailScreen';
+
+export function ProfileScreen({ navigation }) {
     const [fontsLoaded] = useFonts({
         'BlackHanSans': require('./assets/fonts/BlackHanSans-Regular.ttf'),
     });
@@ -13,16 +17,6 @@ export default function ProfileScreen() {
     if (!fontsLoaded) {
         return <StatusBar />;
     }
-
-    const Item = ({ item }) => {
-        return (
-            <TouchableOpacity style={{width: '33.3%'}}>
-                <View style={styles.item}>
-                    <Image source={item.img} style={styles.itemdata} />
-                </View>
-            </TouchableOpacity>
-        )
-    };
     
     const itemData = [
         {   
@@ -72,6 +66,16 @@ export default function ProfileScreen() {
             img: Profile
         },
     ]
+
+    const Item = ({ item }) => {
+        return (
+            <TouchableOpacity style={{width: '33.3%'}} onPress={() => navigation.navigate('PostDetailScreen', {idx: item.idx})}>
+                <View style={styles.item}>
+                    <Image source={item.img} style={styles.itemdata} />
+                </View>
+            </TouchableOpacity>
+        )
+    };
 
     const [refreshing, setRefreshing] = React.useState(false);
 
@@ -126,6 +130,28 @@ export default function ProfileScreen() {
                 />
             </View>
         </View>
+    )
+}
+
+const Stack = createNativeStackNavigator();
+
+export default function ProfileApp() {
+    return (
+        <Stack.Navigator
+            screenOptions={{
+                tabBarShowLabel: false,
+                headerShown: false,
+            }}
+        >
+            <Stack.Screen
+                name="ProfileScreen"
+                component={ProfileScreen}
+            />
+            <Stack.Screen
+                name="PostDetailScreen"
+                component={PostDetailScreen}
+            />
+        </Stack.Navigator>
     )
 }
 
