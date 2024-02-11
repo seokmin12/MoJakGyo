@@ -3,23 +3,12 @@ import { useFonts } from 'expo-font';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import React from 'react';
 
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
 import ProductImg from './assets/images/DSC_0482.jpg';
 
-const Product = ({ item }) => {
-    return (
-        <TouchableOpacity style={styles.ProductContainer}>
-            <View>
-                <View style={styles.ProductImgAspect}>
-                    <Image source={item.img} style={styles.ProductImg} />
-                </View>
-                <View style={styles.ProductContents}>
-                    <Text style={styles.ProductPrice}>100,000원</Text>
-                    <Text style={styles.ProductName} numberOfLines={1}>니콘 D80</Text>
-                </View>
-            </View>
-        </TouchableOpacity>
-    )
-}
+import MarketDetailScreen from './MarketDetailScreen';
 
 const itemData = [
     {   
@@ -70,7 +59,7 @@ const itemData = [
     },
 ]
 
-export default function MarketScreen() {
+export function MarketScreen({ navigation }) {
     const [fontsLoaded] = useFonts({
         'BlackHanSans': require('./assets/fonts/BlackHanSans-Regular.ttf'),
     });
@@ -87,6 +76,22 @@ export default function MarketScreen() {
         setRefreshing(false);
         }, 2000);
     }, []);
+
+    const Product = ({ item }) => {
+        return (
+            <TouchableOpacity style={styles.ProductContainer} onPress={() => navigation.navigate('MarketDetailScreen', {idx: item.idx})}>
+                <View>
+                    <View style={styles.ProductImgAspect}>
+                        <Image source={item.img} style={styles.ProductImg} />
+                    </View>
+                    <View style={styles.ProductContents}>
+                        <Text style={styles.ProductPrice}>100,000원</Text>
+                        <Text style={styles.ProductName} numberOfLines={1}>니콘 D80</Text>
+                    </View>
+                </View>
+            </TouchableOpacity>
+        )
+    }
     
     return (
         <View style={styles.container}>
@@ -101,13 +106,33 @@ export default function MarketScreen() {
                     refreshControl={
                         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
                     }
-                    // contentContainerStyle={{gap: 1,}}
-                    // columnWrapperStyle={{gap: 1,}}
                     numColumns={2}
                     renderItem={Product}
                     keyExtractor={(item) => item.idx}
                 />
         </View>
+    )
+}
+
+const Stack = createNativeStackNavigator();
+
+export default function MarketApp() {
+    return (
+        <Stack.Navigator
+            screenOptions={{
+                tabBarShowLabel: false,
+                headerShown: false,
+            }}
+        >
+            <Stack.Screen
+                name="MarketScreen"
+                component={MarketScreen}
+            />
+            <Stack.Screen
+                name="MarketDetailScreen"
+                component={MarketDetailScreen}
+            />
+        </Stack.Navigator>
     )
 }
 
