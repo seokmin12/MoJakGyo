@@ -24,7 +24,7 @@ function Message() {
                 </View>
                 <View style={styles.MessageContent}>
                     <Text style={styles.MessageCaller}>이석민</Text>
-                    <Text style={styles.MessageDesc}>안녕하세요</Text>
+                    <Text style={styles.MessageDesc} numberOfLines={1}>안녕하세요</Text>
                 </View>
             </View>
         )

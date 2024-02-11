@@ -9,12 +9,9 @@ import ContentsScreen from './ContentsScreen.js';
 import ProfileScreen from './ProfileScreen.js';
 import MessageScreen from './MessageScreen.js';
 import MarketScreen from './MarketScreen.js';
+import UploadScreen from './UploadScreen.js';
 
 const Tab = createBottomTabNavigator();
-
-function UploadScreen() {
-  return <Text>Upload</Text>;
-}
 
 export default function App() {
   const [fontsLoaded] = useFonts({

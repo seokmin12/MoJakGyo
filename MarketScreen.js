@@ -3,7 +3,7 @@ import { useFonts } from 'expo-font';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import React from 'react';
 
-import ProductImg from './assets/images/DSC_0482.jpg'
+import ProductImg from './assets/images/DSC_0482.jpg';
 
 const Product = ({ item }) => {
     return (
@@ -13,8 +13,8 @@ const Product = ({ item }) => {
                     <Image source={item.img} style={styles.ProductImg} />
                 </View>
                 <View style={styles.ProductContents}>
-                    <Text>100,000원</Text>
-                    <Text>니콘 D80</Text>
+                    <Text style={styles.ProductPrice}>100,000원</Text>
+                    <Text style={styles.ProductName} numberOfLines={1}>니콘 D80</Text>
                 </View>
             </View>
         </TouchableOpacity>
@@ -92,6 +92,9 @@ export default function MarketScreen() {
         <View style={styles.container}>
             <View style={styles.Header}>
                 <Text style={styles.Title}>중고장터</Text>
+                <TouchableOpacity>
+                    <Icon name='plus' size={26} />
+                </TouchableOpacity>
             </View>
             <FlatList
                     data={itemData}
@@ -116,6 +119,10 @@ const styles = StyleSheet.create({
 
     Header: {
         padding: 10,
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
     },
 
     Title: {
@@ -134,7 +141,7 @@ const styles = StyleSheet.create({
         height: undefined,
         aspectRatio: 1,
         backgroundColor: '#ccc',
-        borderRadius: 20,
+        borderRadius: 10,
         alignSelf: 'center',
     },
 
@@ -150,4 +157,12 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         paddingTop: 5,
     },
+
+    ProductPrice: {
+        fontWeight: 'bold',
+    },
+
+    ProductName: {
+        color: '#747474',
+    }
 })

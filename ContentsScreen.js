@@ -1,5 +1,6 @@
 import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity } from 'react-native';
 import Profile from '../mojakgyo/assets/images/DSC03437.jpg';
+import Picture from './assets/images/DSC_0482.jpg'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useFonts } from 'expo-font';
 import { useState } from 'react';
@@ -37,13 +38,13 @@ export default function ContentsScreen() {
       </View>
 
       <View style={ContentsStyles.contents}>
-        {/* <Image source={Picture} style={ContentsStyles.ContentsImg} /> */}
+        <Image source={Picture} style={ContentsStyles.ContentsImg} />
       </View>
       <View style={ContentsStyles.footer}>
         <View style={ContentsStyles.reaction}>
           <View style={{alignItems: 'center'}}>
             <TouchableOpacity style={{alignItems: 'center'}} onPress={() => ToggleLikes()}>
-                <Icon name={Likes ? 'thumb-up' : 'thumb-up-outline'} size={25} color={Likes ? '#A1D15C' : '#000000'} />
+                <Icon name={Likes ? 'thumb-up' : 'thumb-up-outline'} size={25} color={Likes ? '#0070F2' : '#000000'} />
                 <Text style={{fontSize: 10}}>10k</Text>
             </TouchableOpacity>
           </View>
