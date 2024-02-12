@@ -10,7 +10,7 @@ import ProductImg from '../assets/images/DSC_0482.jpg';
 import MarketDetailScreen from './detail/MarketDetailScreen';
 
 const itemData = [
-    {   
+    {
         idx: 1,
         img: ProductImg
     }, {
@@ -72,13 +72,13 @@ export function MarketScreen({ navigation }) {
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
         setTimeout(() => {
-        setRefreshing(false);
+            setRefreshing(false);
         }, 2000);
     }, []);
 
     const Product = ({ item }) => {
         return (
-            <TouchableOpacity style={styles.ProductContainer} onPress={() => navigation.navigate('MarketDetailScreen', {idx: item.idx})}>
+            <TouchableOpacity style={styles.ProductContainer} onPress={() => navigation.navigate('MarketDetailScreen', { idx: item.idx })}>
                 <View>
                     <View style={styles.ProductImgAspect}>
                         <Image source={item.img} style={styles.ProductImg} />
@@ -91,7 +91,7 @@ export function MarketScreen({ navigation }) {
             </TouchableOpacity>
         )
     }
-    
+
     return (
         <View style={styles.container}>
             <View style={styles.Header}>
@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
         aspectRatio: 1,
         borderRadius: 10,
     },
-    
+
     ProductContents: {
         display: 'flex',
         flexDirection: 'column',

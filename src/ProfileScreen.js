@@ -7,9 +7,9 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import Profile from '../assets/images/DSC03437.jpg';
 
-import PostDetailScreen from './detail/PostDetailScreen';
 
-export function ProfileScreen({ navigation }) {
+
+export default function ProfileScreen({ navigation }) {
     const [fontsLoaded] = useFonts({
         'BlackHanSans': require('../assets/fonts/BlackHanSans-Regular.ttf'),
     });
@@ -17,9 +17,9 @@ export function ProfileScreen({ navigation }) {
     if (!fontsLoaded) {
         return <StatusBar />;
     }
-    
+
     const itemData = [
-        {   
+        {
             idx: 1,
             img: Profile
         }, {
@@ -69,9 +69,9 @@ export function ProfileScreen({ navigation }) {
 
     const Item = ({ item }) => {
         return (
-            <TouchableOpacity style={{width: '33.3%'}} onPress={() => navigation.navigate('PostDetailScreen', {idx: item.idx})}>
+            <TouchableOpacity style={{ width: '33.3%' }} onPress={() => navigation.navigate('PostDetailScreen', { idx: item.idx })}>
                 <View style={styles.item}>
-                    <Image source={item.img} style={styles.itemdata} />
+                    <Image source={item.img} style={styles.itemdata} sharedTransitionTag="tag" />
                 </View>
             </TouchableOpacity>
         )
@@ -82,7 +82,7 @@ export function ProfileScreen({ navigation }) {
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
         setTimeout(() => {
-        setRefreshing(false);
+            setRefreshing(false);
         }, 2000);
     }, []);
 
@@ -122,8 +122,8 @@ export function ProfileScreen({ navigation }) {
                     refreshControl={
                         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
                     }
-                    contentContainerStyle={{gap: 1,}}
-                    columnWrapperStyle={{gap: 1,}}
+                    contentContainerStyle={{ gap: 1, }}
+                    columnWrapperStyle={{ gap: 1, }}
                     numColumns={3}
                     renderItem={Item}
                     keyExtractor={(item) => item.idx}
@@ -135,25 +135,36 @@ export function ProfileScreen({ navigation }) {
 
 const Stack = createNativeStackNavigator();
 
-export default function ProfileApp() {
-    return (
-        <Stack.Navigator
-            screenOptions={{
-                tabBarShowLabel: false,
-                headerShown: false,
-            }}
-        >
-            <Stack.Screen
-                name="ProfileScreen"
-                component={ProfileScreen}
-            />
-            <Stack.Screen
-                name="PostDetailScreen"
-                component={PostDetailScreen}
-            />
-        </Stack.Navigator>
-    )
-}
+// export default function ProfileApp() {
+//     return (
+//         <Stack.Navigator
+//             screenOptions={{
+//                 tabBarShowLabel: false,
+//                 headerShown: false,
+//                 // presentation: 'modal',
+//                 animationTypeForReplace: 'push',
+//                 animation:'slide_from_right'
+//             }}
+//         >
+//             <Stack.Screen
+//                 name="ProfileScreen"
+//                 component={ProfileScreen}
+//             />
+//             <Stack.Screen
+//                 name="PostDetailScreen"
+//                 component={PostDetailScreen}
+//             />
+//             <Stack.Screen
+//                 name={PostScreen}
+//                 component={PostScreen}
+//             />
+//             <Stack.Screen 
+//                 name="CastingDetailScreen"
+//                 component={CastingDetailScreen}
+//             />
+//         </Stack.Navigator>
+//     )
+// }
 
 const styles = StyleSheet.create({
     container: {
@@ -224,7 +235,7 @@ const styles = StyleSheet.create({
         width: '100%',
         height: undefined,
         aspectRatio: 1,
-    
+
     },
 
     itemdata: {

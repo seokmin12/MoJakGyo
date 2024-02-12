@@ -15,7 +15,7 @@ function Message() {
 
     const result = [];
 
-    for(let i = 0; i < 20; i++) {
+    for (let i = 0; i < 20; i++) {
         result.push(
             <View style={styles.MessageContainer} key={i}>
                 <View style={styles.ProfileAspect}>
@@ -36,7 +36,7 @@ export default function MessageScreen() {
         <View style={styles.container}>
             <Text style={styles.Title}>메시지</Text>
             <View style={styles.MessageBody}>
-                <ScrollView style={{flex: 1,}}>
+                <ScrollView style={{ flex: 1, }}>
                     <Message />
                 </ScrollView>
             </View>
@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         gap: 3,
     },
-    
+
     MessageCaller: {
         fontFamily: 'BlackHanSans',
         fontWeight: 'bold',

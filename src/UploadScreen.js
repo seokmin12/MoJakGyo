@@ -1,23 +1,23 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity, Pressable } from 'react-native';
 import { useFonts } from 'expo-font';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import * as ImagePicker from 'expo-image-picker';
 
 export function ImageViewer({ selectedImage }) {
     const imageSource = { uri: selectedImage }
-  
+
     return <Image source={imageSource} style={styles.image} />;
 }
 
-const CustomButton = ({label, onPress}) => {
+const CustomButton = ({ label, onPress }) => {
     return (
         <Pressable style={styles.CustomButton} onPress={onPress}>
             <Text style={styles.CustomButtonText}>{label}</Text>
         </Pressable>
     )
 }
-  
+
 
 export default function UploadScreen() {
     const [fontsLoaded] = useFonts({
@@ -45,16 +45,16 @@ export default function UploadScreen() {
 
     };
 
-    // useEffect(() => {
-    //     pickImageAsync();
-    // }, []);
+    useEffect(() => {
+        pickImageAsync();
+    }, []);
 
     return (
         <View style={styles.container}>
             <View style={styles.Header}>
                 <Text style={styles.Title}>새 개시물</Text>
                 <TouchableOpacity>
-                    <Text style={{color: '#0070F2'}}>업로드</Text>
+                    <Text style={{ color: '#0070F2' }}>업로드</Text>
                 </TouchableOpacity>
             </View>
             <View style={styles.CurrentImgAspect}>
