@@ -323,7 +323,6 @@ const styles = StyleSheet.create({
     },
 
     Form: {
-        // flex: 1,
         display: 'flex',
         flexDirection: 'column',
         gap: 20,

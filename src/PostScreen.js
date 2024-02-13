@@ -6,13 +6,15 @@ import Profile from '../assets/images/DSC03437.jpg';
 import Picture from '../assets/images/DSC_0482.jpg';
 
 import { useNavigation } from '@react-navigation/native';
+import EtcScreen from './EtcScreen';
 
 
-export default function PostScreen() {
+export default function PostScreen(props) {
     const navigation = useNavigation();
 
     const [Likes, SetLikes] = useState(false);
     const [BookMark, SetBookMark] = useState(false);
+    const [IsVisible, SetVisible] = useState(false);
 
     const [Selected, setSelected] = useState(false);
     const LikeanimatedScale = useRef(new Animated.Value(0)).current;
@@ -47,6 +49,7 @@ export default function PostScreen() {
         }).start();
     }
 
+
     return (
         <View style={styles.container}>
             <View style={styles.header}>
@@ -56,9 +59,13 @@ export default function PostScreen() {
                     </View>
                     <Text style={styles.font}>이석민</Text>
                 </View>
-                <TouchableOpacity onPress={() => navigation.navigate('EtcScreen')}>
+                <TouchableOpacity onPress={() => SetVisible(true)}>
                     <Icon name="dots-horizontal" size={20} />
                 </TouchableOpacity>
+                <EtcScreen
+                    IsVisible={IsVisible}
+                    SetVisible={SetVisible}
+                />
             </View>
 
             <View style={styles.contents}>
@@ -74,7 +81,7 @@ export default function PostScreen() {
                     </Animated.View>
                     <View style={{ alignItems: 'center' }}>
                         <TouchableOpacity style={{ alignItems: 'center' }} onPress={() => navigation.navigate('CastingDetailScreen')}>
-                            <Icon name='briefcase-plus-outline' size={25} />
+                            <Icon name='camera-plus-outline' size={25} />
                             <Text style={{ fontSize: 10 }}>촬영하기</Text>
                         </TouchableOpacity>
                     </View>
