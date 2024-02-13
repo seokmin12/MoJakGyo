@@ -56,13 +56,13 @@ export default function PostScreen() {
                     </View>
                     <Text style={styles.font}>이석민</Text>
                 </View>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate('EtcScreen')}>
                     <Icon name="dots-horizontal" size={20} />
                 </TouchableOpacity>
             </View>
 
             <View style={styles.contents}>
-                <Image source={Picture} style={styles.ContentsImg} />
+                {/* <Image source={Picture} style={styles.ContentsImg} /> */}
             </View>
             <View style={styles.footer}>
                 <View style={styles.reaction}>

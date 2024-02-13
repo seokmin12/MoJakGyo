@@ -17,6 +17,8 @@ import UploadScreen from './src/UploadScreen.js';
 import PostDetailScreen from './src/detail/PostDetailScreen.js';
 import PostScreen from './src/PostScreen.js';
 import CastingDetailScreen from './src/detail/CastingDetailScreen.js';
+import NotificationScreen from './src/NotificationScreen.js';
+import EtcScreen from './src/EtcScreen.js';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -125,31 +127,43 @@ export default function App() {
           }}
           initialRouteName='Tab'
         >
-          <Stack.Screen
-            name="Tab"
-            component={TabNavigator}
-          />
-          <Stack.Screen
-            name="ProfileScreen"
-            component={ProfileScreen}
-          />
-          <Stack.Screen
-            name="PostDetailScreen"
-            component={PostDetailScreen}
-          />
-          <Stack.Screen
-            name="PostScreen"
-            component={PostScreen}
-          />
-          <Stack.Screen
-            options={{
+          <Stack.Group>
+            <Stack.Screen
+              name="Tab"
+              component={TabNavigator}
+            />
+            <Stack.Screen
+              name="ProfileScreen"
+              component={ProfileScreen}
+            />
+            <Stack.Screen
+              name="PostDetailScreen"
+              component={PostDetailScreen}
+            />
+            <Stack.Screen
+              name="PostScreen"
+              component={PostScreen}
+            />
+            <Stack.Screen
+              name='NotificationScreen'
+              component={NotificationScreen}
+            />
+          </Stack.Group>
+          <Stack.Group
+            screenOptions={{
               presentation: 'modal',
-              animationTypeForReplace: 'push',
-              animation: 'slide_from_right'
+              
             }}
-            name="CastingDetailScreen"
-            component={CastingDetailScreen}
-          />
+          >
+            <Stack.Screen
+              name="CastingDetailScreen"
+              component={CastingDetailScreen}
+            />
+            <Stack.Screen
+              name='EtcScreen'
+              component={EtcScreen}
+            />
+          </Stack.Group>
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaView>

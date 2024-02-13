@@ -19,7 +19,7 @@ function CustomBtn({ label, onPress, disabled }) {
             style={[styles.CustomBtn, {
                 backgroundColor: disabled ? '#0070F2' : '#DFDFDF'
             }]}
-            disabled={disabled}
+            disabled={!disabled}
         >
             <Text style={styles.CustomBtnLabel}>{label}</Text>
         </TouchableOpacity>

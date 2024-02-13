@@ -1,11 +1,13 @@
-import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity, RefreshControl } from 'react-native';
+import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity, RefreshControl, FlatList } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useFonts } from 'expo-font';
 import { useState, useCallback } from 'react';
 
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import PostScreen from './PostScreen';
+import PostScreen from './PostScreen.js';
+
+import { useNavigation } from '@react-navigation/native';
 
 
 const itemData = [
@@ -19,6 +21,8 @@ const itemData = [
 const Stack = createNativeStackNavigator();
 
 export default function ContentsScreen() {
+  const navigation = useNavigation();
+
   const [fontsLoaded] = useFonts({
     'BlackHanSans': require('../assets/fonts/BlackHanSans-Regular.ttf'),
   });
@@ -40,7 +44,7 @@ export default function ContentsScreen() {
     <View style={styles.container}>
       <View style={styles.TitleHeader}>
         <Text style={styles.title}>모작교</Text>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('NotificationScreen')}>
           <Icon name='bell-outline' size={26} />
         </TouchableOpacity>
       </View>
@@ -55,6 +59,14 @@ export default function ContentsScreen() {
           )
         }
       </ScrollView>
+      {/* <FlatList
+        data={itemData}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+        renderItem={PostScreen}
+        keyExtractor={(item) => item.idx}
+      /> */}
     </View>
   );
 }
