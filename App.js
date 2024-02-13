@@ -18,7 +18,6 @@ import PostDetailScreen from './src/detail/PostDetailScreen.js';
 import PostScreen from './src/PostScreen.js';
 import CastingDetailScreen from './src/detail/CastingDetailScreen.js';
 import NotificationScreen from './src/NotificationScreen.js';
-import EtcScreen from './src/EtcScreen.js';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -152,16 +151,12 @@ export default function App() {
           <Stack.Group
             screenOptions={{
               presentation: 'modal',
-              
+
             }}
           >
             <Stack.Screen
               name="CastingDetailScreen"
               component={CastingDetailScreen}
-            />
-            <Stack.Screen
-              name='EtcScreen'
-              component={EtcScreen}
             />
           </Stack.Group>
         </Stack.Navigator>
