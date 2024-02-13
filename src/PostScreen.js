@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity, Animated } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, Animated, Pressable } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useState, useRef, useEffect } from 'react';
 
@@ -59,13 +59,20 @@ export default function PostScreen(props) {
                     </View>
                     <Text style={styles.font}>이석민</Text>
                 </View>
-                <TouchableOpacity onPress={() => SetVisible(true)}>
-                    <Icon name="dots-horizontal" size={20} />
-                </TouchableOpacity>
-                <EtcScreen
-                    IsVisible={IsVisible}
-                    SetVisible={SetVisible}
-                />
+                <View style={styles.HeaderRightSide}>
+                    <View style={styles.FollowView}>
+                        <Pressable>
+                            <Text>팔로우</Text>
+                        </Pressable>
+                    </View>
+                    <TouchableOpacity onPress={() => SetVisible(true)}>
+                        <Icon name="dots-horizontal" size={20} />
+                    </TouchableOpacity>
+                    <EtcScreen
+                        IsVisible={IsVisible}
+                        SetVisible={SetVisible}
+                    />
+                </View>
             </View>
 
             <View style={styles.contents}>
@@ -131,6 +138,22 @@ const styles = StyleSheet.create({
         height: undefined,
         aspectRatio: 1,
         borderRadius: 1000,
+    },
+
+    HeaderRightSide: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 10,
+    },
+
+    FollowView: {
+        backgroundColor: '#eee',
+        paddingTop: 8,
+        paddingBottom: 8,
+        paddingLeft: 15,
+        paddingRight: 15,
+        borderRadius: 10,
     },
 
     contents: {
