@@ -1,9 +1,9 @@
 import { StyleSheet, Text, View, Modal, PanResponder, Dimensions, TouchableWithoutFeedback, Pressable, Animated } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, Component } from 'react';
 
-export default function EtcScreen(props) {
-    const { IsVisible, SetVisible } = props;
+export default function BottomSheetScreen({ children, ...props }) {
+    const { IsVisible, SetVisible, height } = props;
 
     const screenHeight = Dimensions.get("screen").height;
     const panY = useRef(new Animated.Value(screenHeight)).current;
@@ -64,23 +64,10 @@ export default function EtcScreen(props) {
                     <View style={styles.background} />
                 </TouchableWithoutFeedback>
                 <Animated.View
-                    style={[styles.ModalContainer, { transform: [{ translateY: translateY }] }]}
+                    style={[styles.ModalContainer, { height: height, transform: [{ translateY: translateY }] }]}
                     {...panResponders.panHandlers}
                 >
-                    <Pressable style={styles.ModalBookMark}>
-                        <Icon name='bookmark-outline' size={25} />
-                        <Text>저장</Text>
-                    </Pressable>
-                    <View style={styles.ETCList}>
-                        <Pressable style={[styles.ETCListItem, { borderBottomColor: '#fff', borderBottomWidth: 1, }]}>
-                            <Icon name='account-circle-outline' size={25} />
-                            <Text>이 계정 정보</Text>
-                        </Pressable>
-                        <Pressable style={styles.ETCListItem}>
-                            <Icon name='comment-alert-outline' size={25} color='#FF0000' />
-                            <Text style={{ color: '#FF0000' }}>신고</Text>
-                        </Pressable>
-                    </View>
+                    {children}
                 </Animated.View>
 
             </View>
@@ -99,7 +86,6 @@ const styles = StyleSheet.create({
     },
 
     ModalContainer: {
-        height: '30%',
         marginTop: 'auto',
         backgroundColor: '#fff',
         borderTopLeftRadius: 20,
@@ -109,28 +95,4 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         gap: 10,
     },
-
-    ModalBookMark: {
-        padding: 10,
-        backgroundColor: '#eee',
-        borderRadius: 10,
-        alignItems: 'center',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 5,
-    },
-
-    ETCList: {
-        // padding: 10,
-        backgroundColor: '#eee',
-        borderRadius: 10,
-    },
-
-    ETCListItem: {
-        padding: 10,
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 10,
-    }
 })

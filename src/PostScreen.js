@@ -6,14 +6,20 @@ import Profile from '../assets/images/DSC03437.jpg';
 import Picture from '../assets/images/DSC_0482.jpg';
 
 import { useNavigation } from '@react-navigation/native';
-import EtcScreen from './EtcScreen';
+import * as Haptics from 'expo-haptics';
+
+import BottomSheetScreen from './BottomSheetScreen';
 
 
-export default function PostScreen(props) {
+export default function PostScreen({ route, ...props }) {
     const navigation = useNavigation();
+
+    const writer = [props.writer || route.params.writer];
+    const job = [props.job || route.params.job];
 
     const [Likes, SetLikes] = useState(false);
     const [BookMark, SetBookMark] = useState(false);
+    const [IsFollow, SetFollow] = useState(false);
     const [IsVisible, SetVisible] = useState(false);
 
     const [Selected, setSelected] = useState(false);
@@ -27,6 +33,7 @@ export default function PostScreen(props) {
 
     const ToggleLikes = () => {
         SetLikes(!Likes);
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
 
         LikeanimatedScale.setValue(0.8);
         Animated.spring(LikeanimatedScale, {
@@ -39,6 +46,7 @@ export default function PostScreen(props) {
 
     const ToggleBookMark = () => {
         SetBookMark(!BookMark);
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
 
         BookMarkanimatedScale.setValue(0.8);
         Animated.spring(BookMarkanimatedScale, {
@@ -49,29 +57,52 @@ export default function PostScreen(props) {
         }).start();
     }
 
+    const ToggleFollow = () => {
+        SetFollow(!IsFollow);
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
+    }
+
 
     return (
         <View style={styles.container}>
             <View style={styles.header}>
-                <View style={styles.ProfileSide}>
+                <Pressable style={styles.ProfileSide} onPress={() => navigation.navigate('ProfileScreen', { name: writer, job: job, IsStack: true })}>
                     <View style={styles.ProfileAspect}>
                         <Image source={Profile} style={styles.profile} />
                     </View>
-                    <Text style={styles.font}>이석민</Text>
-                </View>
+                    <Text style={styles.font}>{writer}</Text>
+                </Pressable>
                 <View style={styles.HeaderRightSide}>
-                    <View style={styles.FollowView}>
-                        <Pressable>
-                            <Text>팔로우</Text>
-                        </Pressable>
-                    </View>
+                    <Pressable style={styles.FollowView} onPress={ToggleFollow} >
+                        {
+                            IsFollow
+                                ? <Text>팔로우</Text>
+                                : <Text>팔로잉</Text>
+                        }
+                    </Pressable>
                     <TouchableOpacity onPress={() => SetVisible(true)}>
                         <Icon name="dots-horizontal" size={20} />
                     </TouchableOpacity>
-                    <EtcScreen
+                    <BottomSheetScreen
                         IsVisible={IsVisible}
                         SetVisible={SetVisible}
-                    />
+                        height={'30%'}
+                    >
+                        <Pressable style={styles.ModalBookMark}>
+                            <Icon name='bookmark-outline' size={25} />
+                            <Text>저장</Text>
+                        </Pressable>
+                        <View style={styles.ETCList}>
+                            <Pressable style={[styles.ETCListItem, { borderBottomColor: '#fff', borderBottomWidth: 1, }]}>
+                                <Icon name='account-circle-outline' size={25} />
+                                <Text>이 계정 정보</Text>
+                            </Pressable>
+                            <Pressable style={styles.ETCListItem}>
+                                <Icon name='comment-alert-outline' size={25} color='#FF0000' />
+                                <Text style={{ color: '#FF0000' }}>신고</Text>
+                            </Pressable>
+                        </View>
+                    </BottomSheetScreen>
                 </View>
             </View>
 
@@ -188,4 +219,27 @@ const styles = StyleSheet.create({
     font: {
         fontFamily: 'BlackHanSans',
     },
+
+    ModalBookMark: {
+        padding: 10,
+        backgroundColor: '#eee',
+        borderRadius: 10,
+        alignItems: 'center',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 5,
+    },
+
+    ETCList: {
+        backgroundColor: '#eee',
+        borderRadius: 10,
+    },
+
+    ETCListItem: {
+        padding: 10,
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 10,
+    }
 });

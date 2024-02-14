@@ -3,8 +3,6 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useFonts } from 'expo-font';
 import { useState, useCallback } from 'react';
 
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-
 import PostScreen from './PostScreen.js';
 
 import { useNavigation } from '@react-navigation/native';
@@ -13,12 +11,14 @@ import { useNavigation } from '@react-navigation/native';
 const itemData = [
   {
     idx: 100,
+    writer: '이석민',
+    job: '작가',
   }, {
     idx: 200,
+    writer: '이민',
+    job: '모델',
   }
 ]
-
-const Stack = createNativeStackNavigator();
 
 export default function ContentsScreen() {
   const navigation = useNavigation();
@@ -46,27 +46,17 @@ export default function ContentsScreen() {
         <Text style={styles.title}>모작교</Text>
         <TouchableOpacity onPress={() => navigation.navigate('NotificationScreen')}>
           <Icon name='bell-outline' size={26} />
+          <View style={styles.Badge}></View>
         </TouchableOpacity>
       </View>
-      <ScrollView
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-      >
-        {
-          itemData.map((item, index) =>
-            <PostScreen key={index} />
-          )
-        }
-      </ScrollView>
-      {/* <FlatList
+      <FlatList
         data={itemData}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
-        renderItem={PostScreen}
+        renderItem={({ item }) => <PostScreen writer={item.writer} job={item.job} />}
         keyExtractor={(item) => item.idx}
-      /> */}
+      />
     </View>
   );
 }
@@ -89,5 +79,17 @@ const styles = StyleSheet.create({
     fontFamily: 'BlackHanSans',
     fontSize: 31,
     fontWeight: 'bold',
+  },
+
+  Badge: {
+    position: 'absolute',
+    right: 0,
+    top: -2,
+    backgroundColor: '#FF0000',
+    borderRadius: 1000,
+    aspectRatio: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 3,
   },
 });
