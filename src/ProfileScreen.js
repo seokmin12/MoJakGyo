@@ -1,62 +1,24 @@
-import { StyleSheet, Text, View, Image, FlatList, TouchableOpacity, RefreshControl, Pressable } from 'react-native';
+import { StyleSheet, Text, View, Image, FlatList, TouchableOpacity, RefreshControl, Pressable, StatusBar } from 'react-native';
 import { useFonts } from 'expo-font';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useEffect, useState, useCallback } from 'react';
+import { useQuery } from "react-query";
+import { useFocusEffect } from '@react-navigation/native';
 
 import { useNavigation } from '@react-navigation/native';
 
 import Profile from '../assets/images/DSC03437.jpg';
+import Picture from '../assets/images/DSC_0482.jpg';
+
 import { GoBackBtn } from './detail/MarketDetailScreen';
 import BottomSheetScreen from './BottomSheetScreen';
 
-const itemData = [
-    {
-        idx: 1,
-        img: Profile
-    }, {
-        idx: 2,
-        img: Profile
-    }, {
-        idx: 3,
-        img: Profile
-    }, {
-        idx: 4,
-        img: Profile
-    }, {
-        idx: 5,
-        img: Profile
-    }, {
-        idx: 6,
-        img: Profile
-    }, {
-        idx: 7,
-        img: Profile
-    }, {
-        idx: 8,
-        img: Profile
-    }, {
-        idx: 9,
-        img: Profile
-    }, {
-        idx: 10,
-        img: Profile
-    }, {
-        idx: 11,
-        img: Profile
-    }, {
-        idx: 12,
-        img: Profile
-    }, {
-        idx: 13,
-        img: Profile
-    }, {
-        idx: 14,
-        img: Profile
-    }, {
-        idx: 15,
-        img: Profile
-    },
-]
+const GetUserPost = async (writer_id) => {
+    const res = await fetch(
+        `http://127.0.0.1:8000/users/${writer_id}/posts/`
+    );
+    return res.json();
+}
 
 function DefaultHeader(props) {
     const { job, IsSettingVisible, SetSettingVisible } = props;
@@ -79,7 +41,7 @@ function DefaultHeader(props) {
                     </Pressable>
                     <Pressable style={styles.SettingItem}>
                         <Icon name='logout' size={25} color={'#FF0000'} />
-                        <Text style={{color: '#FF0000'}}>로그아웃</Text>
+                        <Text style={{ color: '#FF0000' }}>로그아웃</Text>
                     </Pressable>
                 </View>
             </BottomSheetScreen>
@@ -103,9 +65,14 @@ function StackHeader(props) {
 
 export default function ProfileScreen({ route, ...props }) {
     const navigation = props.navigation;
+    const id = [props.id || route.params.id];
     const name = [props.name || route.params.name];
     const job = [props.job || route.params.job];
     const IsStack = [props.IsStack || route.IsStack];
+
+    const [PostData, SetPostData] = useState();
+
+    const { data, status, refetch } = useQuery(["posts", id], () => GetUserPost(id));
 
     const [IsSettingVisible, SetSettingVisible] = useState(false);
 
@@ -121,7 +88,7 @@ export default function ProfileScreen({ route, ...props }) {
         return (
             <TouchableOpacity style={{ width: '33.3%' }} onPress={() => navigation.navigate('PostDetailScreen', { idx: item.idx, writer: name, job: job })}>
                 <View style={styles.item}>
-                    <Image source={item.img} style={styles.itemdata} />
+                    <Image source={Profile} style={styles.itemdata} />
                 </View>
             </TouchableOpacity>
         )
@@ -132,9 +99,17 @@ export default function ProfileScreen({ route, ...props }) {
     const onRefresh = useCallback(() => {
         setRefreshing(true);
         setTimeout(() => {
+            refetch();
             setRefreshing(false);
         }, 2000);
     }, []);
+
+
+    useFocusEffect(
+        useCallback(() => {
+            SetPostData(data);
+        }, [props])
+    )
 
     return (
         <View style={styles.container}>
@@ -167,7 +142,7 @@ export default function ProfileScreen({ route, ...props }) {
 
             <View style={styles.Body}>
                 <FlatList
-                    data={itemData}
+                    data={PostData}
                     refreshControl={
                         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
                     }
@@ -257,7 +232,7 @@ const styles = StyleSheet.create({
         width: '100%',
         height: undefined,
         aspectRatio: 1,
-
+        backgroundColor: '#ccc',
     },
 
     itemdata: {
