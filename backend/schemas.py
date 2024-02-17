@@ -5,6 +5,7 @@ from pydantic import BaseModel
 class PostBase(BaseModel):
     filename: str
     image: str
+    likes: int
 
 
 class PostCreate(PostBase):
