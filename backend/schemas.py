@@ -1,5 +1,5 @@
-from typing import List, Optional
-from pydantic import BaseModel
+from typing import List, Optional, Union
+from pydantic import BaseModel, Field
 
 
 class PostBase(BaseModel):
@@ -12,12 +12,26 @@ class PostCreate(PostBase):
     pass
 
 
-class Post(PostBase):
+class UserOut(BaseModel):
     id: int
-    writer_id: int
+    name: str
+    job: str
 
     class Config:
         orm_mode = True
+
+
+class Post(PostBase):
+    id: int
+    writer_id: int
+    writer: UserOut
+
+    class Config:
+        orm_mode = True
+
+
+class PostOut(BaseModel):
+    Post: Post
 
 
 class UserBase(BaseModel):
@@ -29,9 +43,8 @@ class UserCreate(UserBase):
     pass
 
 
-class User(UserBase):
-    id: int
-    posts: List[Post] = []
+class User(UserOut):
+    posts: List[Post]
 
     class Config:
         orm_mode = True
