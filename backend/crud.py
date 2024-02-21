@@ -1,6 +1,4 @@
 from sqlalchemy.orm import Session
-from sqlalchemy.sql import text
-
 import models, schemas
 
 
@@ -21,9 +19,6 @@ def create_user(db: Session, user: schemas.UserCreate):
 
 
 def get_posts(db: Session, skip: int = 0, limit: int = 100):
-    # return db.query(models.Posts, models.User.name, models.User.job).join(
-    #     models.User, models.Posts.writer_id == models.User.id
-    # )
     return db.query(models.Posts).all()
 
 

@@ -1,27 +1,24 @@
-import { useCallback } from 'react';
+import { useEffect } from 'react';
 import { View, Image, StyleSheet, Animated } from 'react-native';
 import bridge from '../assets/icon.png';
 import { useFonts } from 'expo-font';
-import { useFocusEffect } from '@react-navigation/native';
 
 export default function SplashScreen(props) {
     const { TitleAnimated, LogoAnimated } = props;
     const duration = 1500;
 
-    useFocusEffect(
-        useCallback(() => {
-            Animated.timing(TitleAnimated, {
-                toValue: 50,
-                duration: duration,
-                useNativeDriver: true,
-            }).start();
-            Animated.timing(LogoAnimated, {
-                toValue: -50,
-                duration: duration,
-                useNativeDriver: true,
-            }).start();
-        }, [props])
-    )
+    useEffect(() => {
+        Animated.timing(TitleAnimated, {
+            toValue: 50,
+            duration: duration,
+            useNativeDriver: true,
+        }).start();
+        Animated.timing(LogoAnimated, {
+            toValue: -50,
+            duration: duration,
+            useNativeDriver: true,
+        }).start();
+    }, [props])
 
     const [fontsLoaded] = useFonts({
         'BlackHanSans': require('../assets/fonts/BlackHanSans-Regular.ttf'),

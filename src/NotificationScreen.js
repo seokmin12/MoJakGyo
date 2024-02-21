@@ -1,6 +1,4 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity, Animated, FlatList, RefreshControl } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useState, useRef, useEffect } from 'react';
+import { StyleSheet, Text, View, FlatList, RefreshControl } from 'react-native';
 import { useFonts } from 'expo-font';
 import React from 'react';
 

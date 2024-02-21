@@ -1,6 +1,5 @@
-import { StyleSheet, Text, View, Modal, PanResponder, Dimensions, TouchableWithoutFeedback, Pressable, Animated } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useRef, useEffect, Component } from 'react';
+import { StyleSheet, View, Modal, PanResponder, Dimensions, TouchableWithoutFeedback, Animated } from 'react-native';
+import { useRef, useEffect } from 'react';
 
 export default function BottomSheetScreen({ children, ...props }) {
     const { IsVisible, SetVisible, height } = props;

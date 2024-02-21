@@ -1,9 +1,7 @@
 import { StyleSheet, Text, View, Image, FlatList, TouchableOpacity, RefreshControl, Pressable, StatusBar } from 'react-native';
 import { useFonts } from 'expo-font';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useEffect, useState, useCallback } from 'react';
-import { useQuery } from "react-query";
-import { useFocusEffect } from '@react-navigation/native';
+import { useEffect, useState, useCallback, useRef } from 'react';
 
 import { useNavigation } from '@react-navigation/native';
 
@@ -12,13 +10,6 @@ import Picture from '../assets/images/DSC_0482.jpg';
 
 import { GoBackBtn } from './detail/MarketDetailScreen';
 import BottomSheetScreen from './BottomSheetScreen';
-
-const GetUserPost = async (writer_id) => {
-    const res = await fetch(
-        `http://127.0.0.1:8000/users/${writer_id}/posts/`
-    );
-    return res.json();
-}
 
 function DefaultHeader(props) {
     const { job, IsSettingVisible, SetSettingVisible } = props;
@@ -70,9 +61,8 @@ export default function ProfileScreen({ route, ...props }) {
     const job = [props.job || route.params.job];
     const IsStack = [props.IsStack || route.IsStack];
 
-    const [PostData, SetPostData] = useState();
-
-    const { data, status, refetch } = useQuery(["posts", id], () => GetUserPost(id));
+    const PostData = useRef({});
+    const [isReady, setIsReady] = useState(false);
 
     const [IsSettingVisible, SetSettingVisible] = useState(false);
 
@@ -86,7 +76,7 @@ export default function ProfileScreen({ route, ...props }) {
 
     const Item = ({ item }) => {
         return (
-            <TouchableOpacity style={{ width: '33.3%' }} onPress={() => navigation.navigate('PostDetailScreen', { idx: item.idx, writer: name, job: job })}>
+            <TouchableOpacity style={{ width: '33.3%' }} onPress={() => navigation.navigate('PostDetailScreen', { idx: item.id, writer: name, job: job })}>
                 <View style={styles.item}>
                     <Image source={Profile} style={styles.itemdata} />
                 </View>
@@ -94,22 +84,37 @@ export default function ProfileScreen({ route, ...props }) {
         )
     };
 
+
+    const GetUserPost = async (writer_id) => {
+        try {
+            const response = await fetch(
+              `http://127.0.0.1:8000/users/${writer_id}/posts/`
+            );
+            const json = await response.json();
+            console.log(json);
+            PostData.current = json;
+          } catch (error) {
+            console.log(error);
+          } finally {
+            setIsReady(true);
+          }
+    }
+
     const [refreshing, setRefreshing] = useState(false);
 
     const onRefresh = useCallback(() => {
         setRefreshing(true);
         setTimeout(() => {
-            refetch();
+            GetUserPost(id[0][0]);
             setRefreshing(false);
         }, 2000);
     }, []);
 
-
-    useFocusEffect(
-        useCallback(() => {
-            SetPostData(data);
-        }, [props])
-    )
+    useEffect(() => {
+        if(!isReady) {
+            GetUserPost(id[0][0]);
+        }
+    }, [isReady])
 
     return (
         <View style={styles.container}>
@@ -142,7 +147,7 @@ export default function ProfileScreen({ route, ...props }) {
 
             <View style={styles.Body}>
                 <FlatList
-                    data={PostData}
+                    data={PostData["current"]}
                     refreshControl={
                         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
                     }
@@ -150,7 +155,7 @@ export default function ProfileScreen({ route, ...props }) {
                     columnWrapperStyle={{ gap: 1, }}
                     numColumns={3}
                     renderItem={Item}
-                    keyExtractor={(item) => item.idx}
+                    keyExtractor={(item) => item.id}
                 />
             </View>
         </View>

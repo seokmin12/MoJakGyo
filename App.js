@@ -1,18 +1,15 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, SafeAreaView, Appearance, Animated } from 'react-native';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { useFocusEffect } from '@react-navigation/native';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useFonts } from 'expo-font';
 
 import SplashScreen from './src/SplashScreen.js';
-
-import { QueryClient, QueryClientProvider, useQuery } from 'react-query';
 
 import ContentsScreen from './src/ContentsScreen.js';
 import ProfileScreen from './src/ProfileScreen.js';
@@ -24,28 +21,16 @@ import PostScreen from './src/PostScreen.js';
 import CastingDetailScreen from './src/detail/CastingDetailScreen.js';
 import NotificationScreen from './src/NotificationScreen.js';
 
-const queryClient = new QueryClient();
-
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
-export default function App(props) {
-  const [User, SetUser] = useState({});
+export default function App() {
+  const User = useRef({});
+  const [isReady, setIsReady] = useState(false);
 
   const [isLoading, SetLoading] = useState(true);
   const TitleAnimated = new Animated.Value(0);
   const LogoAnimated = new Animated.Value(0);
-
-  useEffect(() => {
-    Appearance.setColorScheme('light');
-    
-    
-    setTimeout(() => {
-      GetUserInfo();
-      SetLoading(false);
-    }, 2000);
-
-  }, [])
 
   const GetUserInfo = async () => {
     try {
@@ -53,11 +38,29 @@ export default function App(props) {
         'http://127.0.0.1:8000/users/'
       );
       const json = await response.json();
-      SetUser(json[0]);
+      User.current = json[0];
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsReady(true);
     }
   }
+
+  useEffect(() => {
+    Appearance.setColorScheme('light');
+
+    setTimeout(() => {
+      SetLoading(false);
+    }, 2000);
+
+  }, [])
+
+  useEffect(() => {
+    if (!isReady) {
+      GetUserInfo();
+    }
+  }, [isReady])
+
 
   const [fontsLoaded] = useFonts({
     'BlackHanSans': require('./assets/fonts/BlackHanSans-Regular.ttf'),
@@ -144,7 +147,7 @@ export default function App(props) {
             ),
           }}
         >
-          {props => <ProfileScreen {...props} name={User.name} job={User.job} id={User.id} IsStack={false} />}
+          {props => <ProfileScreen {...props} name={User["current"].name} job={User["current"].job} id={User["current"].id} IsStack={false} />}
         </Tab.Screen>
       </Tab.Navigator>
     )
@@ -153,58 +156,56 @@ export default function App(props) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <QueryClientProvider client={queryClient}>
-
-        <NavigationContainer>
-          {isLoading
-            ? <SplashScreen
-              TitleAnimated={TitleAnimated}
-              LogoAnimated={LogoAnimated}
-            />
-            : <Stack.Navigator
-              screenOptions={{
-                tabBarShowLabel: false,
-                headerShown: false,
-              }}
-              initialRouteName='Tab'
-            >
-              <Stack.Group>
-                <Stack.Screen
-                  name="Tab"
-                  component={TabNavigator}
-                />
-                <Stack.Screen
-                  name="ProfileScreen"
-                >
-                  {props => <ProfileScreen {...props} IsStack={true} />}
-                </Stack.Screen>
-                <Stack.Screen
-                  name="PostDetailScreen"
-                  component={PostDetailScreen}
-                />
-                <Stack.Screen
-                  name="PostScreen"
-                  component={PostScreen}
-                />
-                <Stack.Screen
-                  name='NotificationScreen'
-                  component={NotificationScreen}
-                />
-              </Stack.Group>
-              <Stack.Group
-                screenOptions={{
-                  presentation: 'modal',
-
-                }}
+      <NavigationContainer>
+        {isLoading
+          ? <SplashScreen
+            TitleAnimated={TitleAnimated}
+            LogoAnimated={LogoAnimated}
+          />
+          : <Stack.Navigator
+            screenOptions={{
+              tabBarShowLabel: false,
+              headerShown: false,
+            }}
+            initialRouteName='Tab'
+          >
+            <Stack.Group>
+              <Stack.Screen
+                name="Tab"
+                component={TabNavigator}
+              />
+              <Stack.Screen
+                name="ProfileScreen"
               >
-                <Stack.Screen
-                  name="CastingDetailScreen"
-                  component={CastingDetailScreen}
-                />
-              </Stack.Group>
-            </Stack.Navigator>}
-        </NavigationContainer>
-      </QueryClientProvider>
+                {props => <ProfileScreen {...props} IsStack={true} />}
+              </Stack.Screen>
+              <Stack.Screen
+                name="PostDetailScreen"
+                component={PostDetailScreen}
+              />
+              <Stack.Screen
+                name="PostScreen"
+                component={PostScreen}
+              />
+              <Stack.Screen
+                name='NotificationScreen'
+                component={NotificationScreen}
+              />
+            </Stack.Group>
+            <Stack.Group
+              screenOptions={{
+                presentation: 'modal',
+
+              }}
+            >
+              <Stack.Screen
+                name="CastingDetailScreen"
+                component={CastingDetailScreen}
+              />
+            </Stack.Group>
+          </Stack.Navigator>
+        }
+      </NavigationContainer>
     </SafeAreaView>
   );
 }
