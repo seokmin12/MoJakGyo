@@ -87,34 +87,34 @@ export default function ProfileScreen({ route, ...props }) {
     };
 
 
-    const GetUserPost = async (writer_id) => {
-        if (IsProfileRendered) {
-            try {
-                const value = await AsyncStorage.getItem(`${writer_id}_posts`);
-                if (value !== null) {
-                    PostData.current = JSON.parse(value);
-                }
-            } catch (error) {
-                console.log(error);
-            } finally {
-                setIsReady(true);
+    const GetStoragePost = async (writer_id) => {
+        try {
+            const value = await AsyncStorage.getItem(`${writer_id}_posts`);
+            if (value !== null) {
+                PostData.current = JSON.parse(value);
             }
-        } else {
-            try {
-                const response = await fetch(
-                    `http://127.0.0.1:8000/users/${writer_id}/posts/`
-                );
-                const json = await response.json();
-                // console.log(json);
-                PostData.current = json;
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setIsReady(true);
+        }
+    }
 
-                const jsonValue = JSON.stringify(json);
-                await AsyncStorage.setItem(`${writer_id}_posts`, jsonValue);
-            } catch (error) {
-                console.log(error);
-            } finally {
-                setIsReady(true);
-            }
+
+    const GetUserPost = async (writer_id) => {
+        try {
+            const response = await fetch(
+                `http://127.0.0.1:8000/users/${writer_id}/posts/`
+            );
+            const json = await response.json();
+            PostData.current = json;
+
+            const jsonValue = JSON.stringify(json);
+            await AsyncStorage.setItem(`${writer_id}_posts`, jsonValue);
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setIsReady(true);
         }
     }
 
@@ -129,7 +129,10 @@ export default function ProfileScreen({ route, ...props }) {
     }, []);
 
     useEffect(() => {
-        if (!isReady) {
+        if (!isReady && IsProfileRendered) {
+            GetStoragePost(id);
+        }
+        else if (!isReady) {
             GetUserPost(id);
         }
     }, [isReady])
