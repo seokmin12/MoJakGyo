@@ -14,14 +14,15 @@ import BottomSheetScreen from './BottomSheetScreen';
 export default function PostScreen({ route, ...props }) {
     const navigation = useNavigation();
 
-    const id = [props.id || route.params.id];
-    const writer = [props.writer || route.params.writer];
-    const job = [props.job || route.params.job];
+    const id = props.id ?? route.params.id;
+    const writer = props.writer ?? route.params.writer;
+    const job = props.job ?? route.params.job;
 
     const [Likes, SetLikes] = useState(false);
     const [BookMark, SetBookMark] = useState(false);
     const [IsFollow, SetFollow] = useState(false);
     const [IsVisible, SetVisible] = useState(false);
+    const [IsProfileRendered, SetProfileRendered] = useState(false);
 
     const LikeanimatedScale = useRef(new Animated.Value(0)).current;
     const BookMarkanimatedScale = useRef(new Animated.Value(0)).current;
@@ -68,7 +69,15 @@ export default function PostScreen({ route, ...props }) {
             <View style={styles.header}>
                 <Pressable
                     style={styles.ProfileSide}
-                    onPress={() => navigation.navigate('ProfileScreen', {id: id, name: writer, job: job})}>
+                    onPress={
+                        () => {
+                            navigation.navigate('ProfileScreen', {
+                                id: id, name: writer, job: job, IsProfileRendered: IsProfileRendered
+                            })
+                            SetProfileRendered(true);
+                        }
+                    }
+                >
                     <View style={styles.ProfileAspect}>
                         <Image source={Profile} style={styles.profile} />
                     </View>

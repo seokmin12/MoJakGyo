@@ -22,7 +22,7 @@ export default function PostDetailScreen({ route }) {
             <View>
                 <GoBackBtn onPress={() => navigation.goBack()} />
             </View>
-            <PostScreen key={route.params.idx} writer={route.params.writer} job={route.params.job} />
+            <PostScreen key={route.params.id} id={route.params.id} writer={route.params.writer} job={route.params.job} />
         </View>
     )
 }

@@ -4,6 +4,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useEffect, useState, useCallback, useRef } from 'react';
 
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Profile from '../assets/images/DSC03437.jpg';
 import Picture from '../assets/images/DSC_0482.jpg';
@@ -56,10 +57,11 @@ function StackHeader(props) {
 
 export default function ProfileScreen({ route, ...props }) {
     const navigation = props.navigation;
-    const id = [props.id || route.params.id];
-    const name = [props.name || route.params.name];
-    const job = [props.job || route.params.job];
-    const IsStack = [props.IsStack || route.IsStack];
+    const id = props.id ?? route.params.id;
+    const name = props.name ?? route.params.name;
+    const job = props.job ?? route.params.job;
+    const IsStack = props.IsStack ?? route.IsStack;
+    const IsProfileRendered = props.IsProfileRendered ?? route.params.IsProfileRendered;
 
     const PostData = useRef({});
     const [isReady, setIsReady] = useState(false);
@@ -76,7 +78,7 @@ export default function ProfileScreen({ route, ...props }) {
 
     const Item = ({ item }) => {
         return (
-            <TouchableOpacity style={{ width: '33.3%' }} onPress={() => navigation.navigate('PostDetailScreen', { idx: item.id, writer: name, job: job })}>
+            <TouchableOpacity style={{ width: '33.3%' }} key={item.id} onPress={() => navigation.navigate('PostDetailScreen', { id: item.id, writer: name, job: job })}>
                 <View style={styles.item}>
                     <Image source={Profile} style={styles.itemdata} />
                 </View>
@@ -86,18 +88,34 @@ export default function ProfileScreen({ route, ...props }) {
 
 
     const GetUserPost = async (writer_id) => {
-        try {
-            const response = await fetch(
-              `http://127.0.0.1:8000/users/${writer_id}/posts/`
-            );
-            const json = await response.json();
-            console.log(json);
-            PostData.current = json;
-          } catch (error) {
-            console.log(error);
-          } finally {
-            setIsReady(true);
-          }
+        if (IsProfileRendered) {
+            try {
+                const value = await AsyncStorage.getItem(`${writer_id}_posts`);
+                if (value !== null) {
+                    PostData.current = JSON.parse(value);
+                }
+            } catch (error) {
+                console.log(error);
+            } finally {
+                setIsReady(true);
+            }
+        } else {
+            try {
+                const response = await fetch(
+                    `http://127.0.0.1:8000/users/${writer_id}/posts/`
+                );
+                const json = await response.json();
+                // console.log(json);
+                PostData.current = json;
+
+                const jsonValue = JSON.stringify(json);
+                await AsyncStorage.setItem(`${writer_id}_posts`, jsonValue);
+            } catch (error) {
+                console.log(error);
+            } finally {
+                setIsReady(true);
+            }
+        }
     }
 
     const [refreshing, setRefreshing] = useState(false);
@@ -105,21 +123,21 @@ export default function ProfileScreen({ route, ...props }) {
     const onRefresh = useCallback(() => {
         setRefreshing(true);
         setTimeout(() => {
-            GetUserPost(id[0][0]);
+            GetUserPost(id);
             setRefreshing(false);
         }, 2000);
     }, []);
 
     useEffect(() => {
-        if(!isReady) {
-            GetUserPost(id[0][0]);
+        if (!isReady) {
+            GetUserPost(id);
         }
     }, [isReady])
 
     return (
         <View style={styles.container}>
             {
-                IsStack[0]
+                IsStack
                     ? <StackHeader job={job} />
                     : <DefaultHeader job={job} IsSettingVisible={IsSettingVisible} SetSettingVisible={SetSettingVisible} />
             }
