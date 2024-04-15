@@ -147,7 +147,7 @@ export default function App() {
             ),
           }}
         >
-          {props => <ProfileScreen {...props} name={User["current"].name} job={User["current"].job} id={User["current"].id} IsStack={false} IsProfileRendered={false} />}
+          {props => <ProfileScreen {...props} name={User["current"].name} job={User["current"].job} writer_id={User["current"].id} IsStack={false} IsProfileRendered={false} />}
         </Tab.Screen>
       </Tab.Navigator>
     )

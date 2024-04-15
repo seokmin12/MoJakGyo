@@ -1,7 +1,9 @@
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException, UploadFile, File
 from sqlalchemy.orm import Session
 import crud, models, schemas
 from database import SessionLocal, engine
+import uuid
+import base64
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -57,3 +59,9 @@ def read_post_for_user(
 def read_posts(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     posts = crud.get_posts(db, skip=skip, limit=limit)
     return posts
+
+
+@app.patch("/posts/{post_id}/likes/{is_liked}")
+def update_post_likes(post_id: int, is_liked: int, post:schemas.PostUpdate, db: Session = Depends(get_db)):
+    # is_liked - 0: not liked, 1: liked
+    return crud.update_likes(db=db, post_id=post_id, is_liked=is_liked, post=post)

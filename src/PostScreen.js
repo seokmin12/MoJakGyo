@@ -14,27 +14,55 @@ import BottomSheetScreen from './BottomSheetScreen';
 export default function PostScreen({ route, ...props }) {
     const navigation = useNavigation();
 
-    const id = props.id ?? route.params.id;
+    const writer_id = props.writer_id ?? route.params.writer_id;
     const writer = props.writer ?? route.params.writer;
     const job = props.job ?? route.params.job;
+    const post_id = props.post_id ?? route.params.post_id;
+    const likes = props.likes ?? route.params.likes;
 
-    const [Likes, SetLikes] = useState(false);
+    const [IsLike, SetIsLike] = useState(false);
+    const [Likes, SetLikes] = useState(0);
     const [BookMark, SetBookMark] = useState(false);
     const [IsFollow, SetFollow] = useState(false);
     const [IsVisible, SetVisible] = useState(false);
     const [IsProfileRendered, SetProfileRendered] = useState(false);
 
+    const [isReady, setIsReady] = useState(false);
+
     const LikeanimatedScale = useRef(new Animated.Value(0)).current;
     const BookMarkanimatedScale = useRef(new Animated.Value(0)).current;
+
+    const Update_Likes = async (post_id) => {
+        try {
+            if (IsLike == false) {
+                Is_liked = 1;
+                SetLikes(Likes + 1);
+            } else {
+                Is_liked = 0;
+                SetLikes(Likes - 1);
+            }
+            await fetch(
+              `http://127.0.0.1:8000/posts/${post_id}/likes/${Is_liked}`
+            , {
+                method: "PATCH"
+            });
+          } catch (error) {
+            console.log(error);
+          } finally {
+            setIsReady(true);
+          }
+    }
 
     useEffect(() => {
         LikeanimatedScale.setValue(1);
         BookMarkanimatedScale.setValue(1);
+        SetLikes(likes);
     }, []);
 
     const ToggleLikes = () => {
-        SetLikes(!Likes);
-        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
+        SetIsLike(!IsLike);
+        Update_Likes(post_id);
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
 
         LikeanimatedScale.setValue(0.8);
         Animated.spring(LikeanimatedScale, {
@@ -72,7 +100,7 @@ export default function PostScreen({ route, ...props }) {
                     onPress={
                         () => {
                             navigation.navigate('ProfileScreen', {
-                                id: id, name: writer, job: job, IsProfileRendered: IsProfileRendered
+                                writer_id: writer_id, name: writer, job: job, IsProfileRendered: IsProfileRendered
                             })
                             SetProfileRendered(true);
                         }
@@ -124,8 +152,8 @@ export default function PostScreen({ route, ...props }) {
                 <View style={styles.reaction}>
                     <Animated.View style={{ alignItems: 'center', transform: [{ scale: LikeanimatedScale }] }}>
                         <TouchableOpacity style={{ alignItems: 'center' }} onPress={() => ToggleLikes()}>
-                            <Icon name={Likes ? 'thumb-up' : 'thumb-up-outline'} size={25} color={Likes ? '#0070F2' : '#000000'} />
-                            <Text style={{ fontSize: 10 }}>10k</Text>
+                            <Icon name={IsLike ? 'thumb-up' : 'thumb-up-outline'} size={25} color={IsLike ? '#0070F2' : '#000000'} />
+                            <Text style={{ fontSize: 10 }}>{Likes}</Text>
                         </TouchableOpacity>
                     </Animated.View>
                     <View style={{ alignItems: 'center' }}>

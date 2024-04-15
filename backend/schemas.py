@@ -12,6 +12,10 @@ class PostCreate(PostBase):
     pass
 
 
+class PostUpdate(BaseModel):
+    likes: int = None
+
+
 class UserOut(BaseModel):
     id: int
     name: str

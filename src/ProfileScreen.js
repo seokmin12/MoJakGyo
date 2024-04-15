@@ -57,7 +57,7 @@ function StackHeader(props) {
 
 export default function ProfileScreen({ route, ...props }) {
     const navigation = props.navigation;
-    const id = props.id ?? route.params.id;
+    const writer_id = props.writer_id ?? route.params.writer_id;
     const name = props.name ?? route.params.name;
     const job = props.job ?? route.params.job;
     const IsStack = props.IsStack ?? route.IsStack;
@@ -78,7 +78,7 @@ export default function ProfileScreen({ route, ...props }) {
 
     const Item = ({ item }) => {
         return (
-            <TouchableOpacity style={{ width: '33.3%' }} key={item.id} onPress={() => navigation.navigate('PostDetailScreen', { id: item.id, writer: name, job: job })}>
+            <TouchableOpacity style={{ width: '33.3%' }} key={item.id} onPress={() => navigation.navigate('PostDetailScreen', { post_id: item.id, writer: name, job: job, writer_id: writer_id, likes:item.likes })}>
                 <View style={styles.item}>
                     <Image source={Profile} style={styles.itemdata} />
                 </View>
@@ -123,17 +123,17 @@ export default function ProfileScreen({ route, ...props }) {
     const onRefresh = useCallback(() => {
         setRefreshing(true);
         setTimeout(() => {
-            GetUserPost(id);
+            GetUserPost(writer_id);
             setRefreshing(false);
         }, 2000);
     }, []);
 
     useEffect(() => {
         if (!isReady && IsProfileRendered) {
-            GetStoragePost(id);
+            GetStoragePost(writer_id);
         }
         else if (!isReady) {
-            GetUserPost(id);
+            GetUserPost(writer_id);
         }
     }, [isReady])
 

@@ -32,3 +32,15 @@ def create_post(db: Session, post: schemas.PostCreate, writer_id: int):
     db.commit()
     db.refresh(db_item)
     return db_item
+
+
+def update_likes(db: Session, post_id: int, is_liked: int, post: schemas.PostUpdate):
+    db_post = db.query(models.Posts).filter(models.Posts.id == post_id).first()
+    if is_liked == 0:
+        db_post.likes -= 1
+    else:
+        db_post.likes += 1
+    db.add(db_post)
+    db.commit()
+    db.refresh(db_post)
+    return db_post.likes
