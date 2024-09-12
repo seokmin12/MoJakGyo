@@ -10,6 +10,8 @@ import * as Haptics from 'expo-haptics';
 
 import BottomSheetScreen from './BottomSheetScreen';
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 export default function PostScreen({ route, ...props }) {
     const navigation = useNavigation();
@@ -32,25 +34,40 @@ export default function PostScreen({ route, ...props }) {
     const LikeanimatedScale = useRef(new Animated.Value(0)).current;
     const BookMarkanimatedScale = useRef(new Animated.Value(0)).current;
 
-    const Update_Likes = async (post_id) => {
+    const getAsyncStorage = async (key) => {
         try {
-            if (IsLike == false) {
-                Is_liked = 1;
-                SetLikes(Likes + 1);
-            } else {
-                Is_liked = 0;
-                SetLikes(Likes - 1);
-            }
-            await fetch(
-              `http://127.0.0.1:8000/posts/${post_id}/likes/${Is_liked}`
-            , {
-                method: "PATCH"
-            });
-          } catch (error) {
-            console.log(error);
-          } finally {
-            setIsReady(true);
+          const json = await AsyncStorage.getItem('User');
+          if (json) {
+            const value = JSON.parse(json)[key];
+            return value;
           }
+          return null;
+        } catch (error) {
+          console.log(`Error retrieving ${key} from AsyncStorage:`, error);
+          return null;
+        }
+    };
+
+    const Update_Likes = async (post_id) => {
+        console.log(getAsyncStorage("id"))
+        // try {
+        //     if (IsLike == false) {
+        //         Is_liked = 1;
+        //         SetLikes(Likes + 1);
+        //     } else {
+        //         Is_liked = 0;
+        //         SetLikes(Likes - 1);
+        //     }
+        //     await fetch(
+        //       `http://127.0.0.1:8000/posts/${post_id}/likes/${Is_liked}`
+        //     , {
+        //         method: "PATCH"
+        //     });
+        //   } catch (error) {
+        //     console.log(error);
+        //   } finally {
+        //     setIsReady(true);
+        //   }
     }
 
     useEffect(() => {

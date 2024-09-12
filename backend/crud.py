@@ -35,7 +35,7 @@ def create_post(db: Session, post: schemas.PostCreate, writer_id: int):
     return db_post
 
 
-def update_likes(db: Session, post_id: int, is_liked: int):
+def update_likes(db: Session, post_id: int, user_id: int, is_liked: int):
     db_post = db.query(models.Posts).filter(models.Posts.id == post_id).first()
     if not db_post:
         raise ValueError("Post not found")

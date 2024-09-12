@@ -20,12 +20,12 @@ import PostDetailScreen from './src/detail/PostDetailScreen.js';
 import PostScreen from './src/PostScreen.js';
 import CastingDetailScreen from './src/detail/CastingDetailScreen.js';
 import NotificationScreen from './src/NotificationScreen.js';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-  const User = useRef({});
   const [isReady, setIsReady] = useState(false);
 
   const [isLoading, SetLoading] = useState(true);
@@ -38,7 +38,9 @@ export default function App() {
         'http://127.0.0.1:8000/users/'
       );
       const json = await response.json();
-      User.current = json[0];
+      
+      await AsyncStorage.setItem('User', JSON.stringify(json[0]));
+
     } catch (error) {
       console.log(error);
     } finally {
@@ -49,7 +51,7 @@ export default function App() {
   useEffect(() => {
     Appearance.setColorScheme('light');
 
-    setTimeout(() => {
+    setTimeout(async () => {
       SetLoading(false);
     }, 2000);
 
@@ -147,12 +149,11 @@ export default function App() {
             ),
           }}
         >
-          {props => <ProfileScreen {...props} name={User["current"].name} job={User["current"].job} writer_id={User["current"].id} IsStack={false} IsProfileRendered={false} />}
+          {props => <ProfileScreen {...props} IsStack={false} IsProfileRendered={false} />}
         </Tab.Screen>
       </Tab.Navigator>
     )
   }
-
 
   return (
     <SafeAreaView style={styles.container}>
