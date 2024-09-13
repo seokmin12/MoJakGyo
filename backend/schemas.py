@@ -35,6 +35,8 @@ class UserOut(BaseModel):
     id: int
     name: str
     job: str
+    follower: List[int] = []
+    following: List[int] = []
 
     class Config:
         orm_mode = True

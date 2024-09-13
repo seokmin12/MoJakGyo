@@ -63,6 +63,8 @@ export default function ProfileScreen({ route, ...props }) {
     const writer_id = useRef(0);
     const name = useRef("");
     const job = useRef("");
+    const followers = useRef([]);
+    const followings = useRef([]);
 
     const PostData = useRef({});
     const [isReady, setIsReady] = useState(false);
@@ -134,6 +136,8 @@ export default function ProfileScreen({ route, ...props }) {
             writer_id.current = JSON.parse(value)["id"];
             name.current = JSON.parse(value)["name"];
             job.current = JSON.parse(value)["job"];
+            followers.current = JSON.parse(value)["follower"];
+            followings.current = JSON.parse(value)["following"];
         })
         .then(res => {
             if (!isReady && IsProfileRendered) {
@@ -143,6 +147,7 @@ export default function ProfileScreen({ route, ...props }) {
                 GetUserPost(writer_id.current);
             }
         })
+        console.log()
     }, [isReady])
 
     return (
@@ -160,15 +165,15 @@ export default function ProfileScreen({ route, ...props }) {
                 <Text style={styles.ProfileName}>{name.current}</Text>
                 <View style={styles.follow}>
                     <View style={styles.FollowFont}>
-                        <Text style={styles.FollowFont}>30</Text>
+                        <Text style={styles.FollowFont}>{PostData["current"].length}</Text>
                         <Text style={styles.FollowFont}>posts</Text>
                     </View>
                     <View style={styles.FollowFont}>
-                        <Text style={styles.FollowFont}>143</Text>
+                        <Text style={styles.FollowFont}>{followers["current"].length}</Text>
                         <Text style={styles.FollowFont}>followers</Text>
                     </View>
                     <View style={styles.FollowFont}>
-                        <Text style={styles.FollowFont}>140</Text>
+                        <Text style={styles.FollowFont}>{followings["current"].length}</Text>
                         <Text style={styles.FollowFont}>following</Text>
                     </View>
                 </View>

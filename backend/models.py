@@ -22,5 +22,7 @@ class User(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, nullable=False)
     job = Column(String, nullable=False)
+    follower = Column(JSON, default=[])
+    following = Column(JSON, default=[])
 
     posts = relationship('Posts', back_populates='writer')
