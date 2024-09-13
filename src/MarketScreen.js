@@ -1,62 +1,13 @@
 import { StyleSheet, Text, View, Image, FlatList, TouchableOpacity, RefreshControl } from 'react-native';
 import { useFonts } from 'expo-font';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import React from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import ProductImg from '../assets/images/DSC_0482.jpg';
 
 import MarketDetailScreen from './detail/MarketDetailScreen';
-
-const itemData = [
-    {
-        idx: 1,
-        img: ProductImg
-    }, {
-        idx: 2,
-        img: ProductImg
-    }, {
-        idx: 3,
-        img: ProductImg
-    }, {
-        idx: 4,
-        img: ProductImg
-    }, {
-        idx: 5,
-        img: ProductImg
-    }, {
-        idx: 6,
-        img: ProductImg
-    }, {
-        idx: 7,
-        img: ProductImg
-    }, {
-        idx: 8,
-        img: ProductImg
-    }, {
-        idx: 9,
-        img: ProductImg
-    }, {
-        idx: 10,
-        img: ProductImg
-    }, {
-        idx: 11,
-        img: ProductImg
-    }, {
-        idx: 12,
-        img: ProductImg
-    }, {
-        idx: 13,
-        img: ProductImg
-    }, {
-        idx: 14,
-        img: ProductImg
-    }, {
-        idx: 15,
-        img: ProductImg
-    },
-]
 
 export function MarketScreen({ navigation }) {
     const [fontsLoaded] = useFonts({
@@ -68,6 +19,8 @@ export function MarketScreen({ navigation }) {
     }
 
     const [refreshing, setRefreshing] = React.useState(false);
+    const MarketData = useRef({});
+    const [isReady, setIsReady] = useState(false);
 
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
@@ -76,16 +29,48 @@ export function MarketScreen({ navigation }) {
         }, 2000);
     }, []);
 
+    const addComma = (price) => {
+        let returnString = price?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        return returnString;
+    }
+
+    const GetMarketData = async () => {
+        try {
+            const response = await fetch('http://127.0.0.1:8000/market/');
+            const json = await response.json();
+
+            MarketData["current"] = json;
+        } catch (e) {
+            console.log(e);
+        } finally {
+            setIsReady(true)
+        }
+    }
+
+    useEffect(() => {
+        GetMarketData();
+        setTimeout(() => {
+            console.log(MarketData["current"]);
+        }, 100)
+    }, [isReady])
+
     const Product = ({ item }) => {
         return (
-            <TouchableOpacity style={styles.ProductContainer} onPress={() => navigation.navigate('MarketDetailScreen', { idx: item.idx })}>
+            <TouchableOpacity style={styles.ProductContainer} onPress={() => navigation.navigate('MarketDetailScreen', { 
+                id: item.id, 
+                name: item.name, 
+                desc: item.description, 
+                image: item.image, 
+                price: item.price, 
+                seller_id: item.seller.id 
+            })}>
                 <View>
                     <View style={styles.ProductImgAspect}>
-                        <Image source={item.img} style={styles.ProductImg} />
+                        <Image source={item.image} style={styles.ProductImg} />
                     </View>
                     <View style={styles.ProductContents}>
-                        <Text style={styles.ProductPrice}>100,000원</Text>
-                        <Text style={styles.ProductName} numberOfLines={1}>니콘 D80</Text>
+                        <Text style={styles.ProductPrice}>{addComma(item.price)}원</Text>
+                        <Text style={styles.ProductName} numberOfLines={1}>{item.name}</Text>
                     </View>
                 </View>
             </TouchableOpacity>
@@ -101,7 +86,7 @@ export function MarketScreen({ navigation }) {
                 </TouchableOpacity>
             </View>
             <FlatList
-                data={itemData}
+                data={MarketData["current"]}
                 refreshControl={
                     <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
                 }

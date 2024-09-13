@@ -26,3 +26,17 @@ class User(Base):
     following = Column(JSON, default=[])
 
     posts = relationship('Posts', back_populates='writer')
+
+
+class Market(Base):
+    __tablename__ = "Market"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, nullable=False)
+    description = Column(String, nullable=False)
+    image = Column(String, nullable=False)
+    price = Column(Integer, nullable=False)
+    seller_id = Column(Integer, ForeignKey("User.id"), nullable=False)
+    seller = relationship('User', foreign_keys=[seller_id])
+    buyer_id = Column(Integer, ForeignKey("User.id"), nullable=True)
+    buyer = relationship('User', foreign_keys=[buyer_id])

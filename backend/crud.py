@@ -82,3 +82,7 @@ def get_likes(db: Session, post_id: int, user_id: int):
         "liked_len": liked_len,
         "liked_people": liked_people
     }
+
+
+def get_market(db: Session):
+    return db.query(models.Market).all()

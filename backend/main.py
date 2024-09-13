@@ -68,3 +68,9 @@ def get_post_likes(post_id: int, user_id: int, db: Session = Depends(get_db)):
         return [liked]  # Wrap the result in a list to match the response_model
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
+
+
+@app.get("/market/", response_model=List[schemas.MarketOut])
+def get_market(db: Session = Depends(get_db)):
+    market = crud.get_market(db=db)
+    return market

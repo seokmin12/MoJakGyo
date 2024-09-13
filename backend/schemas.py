@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 from pydantic import BaseModel
 
 
@@ -49,6 +49,25 @@ class Post(BaseModel):
     likes: int
     writer_id: int
     writer: UserOut
+
+    class Config:
+        orm_mode = True
+
+
+class Market(BaseModel):
+    id: int
+    name: str
+    description: str
+    image: str
+    price: int
+
+    class Config:
+        orm_mode = True
+
+
+class MarketOut(Market):
+    seller: UserOut  # Nested seller information as UserOut
+    buyer: Optional[UserOut] = None  # Optional nested buyer information as UserOut
 
     class Config:
         orm_mode = True
