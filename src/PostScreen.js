@@ -31,6 +31,8 @@ export default function PostScreen({ route, ...props }) {
 
     const [isReady, setIsReady] = useState(false);
 
+    const LikesData = useRef({});
+
     const LikeanimatedScale = useRef(new Animated.Value(0)).current;
     const BookMarkanimatedScale = useRef(new Animated.Value(0)).current;
 
@@ -49,31 +51,49 @@ export default function PostScreen({ route, ...props }) {
     };
 
     const Update_Likes = async (post_id) => {
-        console.log(getAsyncStorage("id"))
-        // try {
-        //     if (IsLike == false) {
-        //         Is_liked = 1;
-        //         SetLikes(Likes + 1);
-        //     } else {
-        //         Is_liked = 0;
-        //         SetLikes(Likes - 1);
-        //     }
-        //     await fetch(
-        //       `http://127.0.0.1:8000/posts/${post_id}/likes/${Is_liked}`
-        //     , {
-        //         method: "PATCH"
-        //     });
-        //   } catch (error) {
-        //     console.log(error);
-        //   } finally {
-        //     setIsReady(true);
-        //   }
+        // console.log(getAsyncStorage("id"))
+        var Is_liked;
+        try {
+            if (IsLike == false) {
+                Is_liked = true;
+                SetLikes(Likes + 1);
+            } else {
+                Is_liked = false;
+                SetLikes(Likes - 1);
+            }
+            await fetch(
+              `http://127.0.0.1:8000/posts/${post_id}/likes/1/${Is_liked}`
+            , {
+                method: "PATCH"
+            });
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setIsReady(true);
+        }
+    }
+
+    const GetLikes = async (post_id, user_id) => {
+        try {
+            const response = await fetch(`http://127.0.0.1:8000/posts/${post_id}/likes/${user_id}`)
+            const json = await response.json();
+            LikesData["current"] = json;
+        } catch (e) {
+            console.log(e);
+        }
     }
 
     useEffect(() => {
         LikeanimatedScale.setValue(1);
         BookMarkanimatedScale.setValue(1);
         SetLikes(likes);
+        GetLikes(1, 1);
+
+        setTimeout(() => {
+            if (LikesData["current"][0]["is_liked"]) {
+                SetIsLike(true);
+            }
+        }, 100)
     }, []);
 
     const ToggleLikes = () => {

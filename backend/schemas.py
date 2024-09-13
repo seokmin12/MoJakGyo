@@ -3,12 +3,23 @@ from pydantic import BaseModel
 
 
 class PostBase(BaseModel):
+    id: int
     filename: str
     image: str
 
 
 class PostCreate(PostBase):
-    liked_people: List[str] = []
+    pass
+
+
+class PostLikeOut(BaseModel):
+    id: int
+    is_liked: bool
+    liked_len: int
+    liked_people: List[int] = []
+
+    class Config:
+        orm_mode = True
 
 
 class UserBase(BaseModel):

@@ -53,9 +53,18 @@ def read_posts(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     return posts
 
 
-@app.patch("/posts/{post_id}/likes/{user_id}/{is_liked}", response_model=int)
-def update_post_likes(post_id: int, user_id: int, is_liked: int, db: Session = Depends(get_db)):
+@app.patch("/posts/{post_id}/likes/{user_id}/{is_liked}/", response_model=int)
+def update_post_likes(post_id: int, user_id: int, is_liked: bool, db: Session = Depends(get_db)):
     try:
         return crud.update_likes(db=db, post_id=post_id, user_id=user_id, is_liked=is_liked)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+
+
+@app.get("/posts/{post_id}/likes/{user_id}", response_model=List[schemas.PostLikeOut])
+def get_post_likes(post_id: int, user_id: int, db: Session = Depends(get_db)):
+    try:
+        liked = crud.get_likes(db=db, post_id=post_id, user_id=user_id)
+        return [liked]  # Wrap the result in a list to match the response_model
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
