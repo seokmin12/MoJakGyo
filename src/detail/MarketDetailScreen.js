@@ -1,17 +1,10 @@
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Pressable } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from 'react-native';
 import { useFonts } from 'expo-font';
 import React from 'react';
 
 import { useNavigation } from '@react-navigation/native';
 import GoBackBtn from '../components/GoBackBtn';
-
-const CustomBtn = ({ label, onPress }) => {
-    return (
-        <TouchableOpacity style={styles.Btn} onPress={() => console.log('ok')}>
-            <Text style={styles.BtnFont}>{label}</Text>
-        </TouchableOpacity>
-    )
-}
+import CustomBtn from '../components/CustomBtn';
 
 const addComma = (price) => {
     let returnString = price?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -112,17 +105,4 @@ const styles = StyleSheet.create({
     DescFont: {
         fontSize: 15,
     },
-
-    Btn: {
-        padding: 15,
-        alignItems: 'center',
-        backgroundColor: '#0070F2',
-    },
-
-    BtnFont: {
-        color: '#fff',
-        fontWeight: 'bold',
-        fontSize: 15,
-        fontFamily: 'BlackHanSans',
-    }
 })

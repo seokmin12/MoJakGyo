@@ -50,9 +50,6 @@ export function MarketScreen({ navigation }) {
 
     useEffect(() => {
         GetMarketData();
-        setTimeout(() => {
-            console.log(MarketData["current"]);
-        }, 100)
     }, [isReady])
 
     const Product = ({ item }) => {
