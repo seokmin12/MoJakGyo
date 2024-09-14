@@ -8,6 +8,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import ProductImg from '../assets/images/DSC_0482.jpg';
 
 import MarketDetailScreen from './detail/MarketDetailScreen';
+import MarketItemUploadScreen from './MarketItemUploadScreen';
 
 export function MarketScreen({ navigation }) {
     const [fontsLoaded] = useFonts({
@@ -81,7 +82,7 @@ export function MarketScreen({ navigation }) {
         <View style={styles.container}>
             <View style={styles.Header}>
                 <Text style={styles.Title}>중고장터</Text>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate('MarketItemUploadScreen')}>
                     <Icon name='plus' size={26} />
                 </TouchableOpacity>
             </View>
@@ -115,6 +116,10 @@ export default function MarketApp() {
             <Stack.Screen
                 name="MarketDetailScreen"
                 component={MarketDetailScreen}
+            />
+            <Stack.Screen 
+                name="MarketItemUploadScreen"
+                component={MarketItemUploadScreen}
             />
         </Stack.Navigator>
     )

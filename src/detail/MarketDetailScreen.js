@@ -1,23 +1,15 @@
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Pressable } from 'react-native';
 import { useFonts } from 'expo-font';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import React from 'react';
 
 import { useNavigation } from '@react-navigation/native';
+import GoBackBtn from '../components/GoBackBtn';
 
 const CustomBtn = ({ label, onPress }) => {
     return (
         <TouchableOpacity style={styles.Btn} onPress={() => console.log('ok')}>
             <Text style={styles.BtnFont}>{label}</Text>
         </TouchableOpacity>
-    )
-}
-
-export function GoBackBtn({ onPress }) {
-    return (
-        <Pressable onPress={onPress}>
-            <Icon name='chevron-left' size={31} color="#000" />
-        </Pressable>
     )
 }
 
