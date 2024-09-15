@@ -74,3 +74,8 @@ def get_post_likes(post_id: int, user_id: int, db: Session = Depends(get_db)):
 def get_market(db: Session = Depends(get_db)):
     market = crud.get_market(db=db)
     return market
+
+
+@app.post('/market/', response_model=schemas.Market)
+def create_market(market: schemas.MarketCreate, db: Session = Depends(get_db)):
+    return crud.create_market(db=db, market=market)

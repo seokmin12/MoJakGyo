@@ -3,12 +3,12 @@ from pydantic import BaseModel
 
 
 class PostBase(BaseModel):
-    id: int
     filename: str
     image: str
 
 
 class PostCreate(PostBase):
+    writer_id: int
     pass
 
 
@@ -31,10 +31,8 @@ class UserCreate(UserBase):
     pass
 
 
-class UserOut(BaseModel):
+class UserOut(UserBase):
     id: int
-    name: str
-    job: str
     follower: List[int] = []
     following: List[int] = []
 
@@ -42,10 +40,8 @@ class UserOut(BaseModel):
         orm_mode = True
 
 
-class Post(BaseModel):
+class Post(PostBase):
     id: int
-    filename: str
-    image: str
     likes: int
     writer_id: int
     writer: UserOut
@@ -54,20 +50,30 @@ class Post(BaseModel):
         orm_mode = True
 
 
-class Market(BaseModel):
-    id: int
+class MarketBase(BaseModel):
     name: str
     description: str
     image: str
     price: int
 
+
+class Market(MarketBase):
+    id: int
+    seller_id: int
+
     class Config:
         orm_mode = True
 
 
-class MarketOut(Market):
+class MarketOut(MarketBase):
+    id: int
     seller: UserOut  # Nested seller information as UserOut
     buyer: Optional[UserOut] = None  # Optional nested buyer information as UserOut
 
     class Config:
         orm_mode = True
+
+
+class MarketCreate(MarketBase):
+    seller_id: int
+    pass

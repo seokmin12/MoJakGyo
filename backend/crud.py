@@ -86,3 +86,11 @@ def get_likes(db: Session, post_id: int, user_id: int):
 
 def get_market(db: Session):
     return db.query(models.Market).all()
+
+
+def create_market(db: Session, market: schemas.MarketCreate):
+    db_market = models.Market(**market.dict())
+    db.add(db_market)
+    db.commit()
+    db.refresh(db_market)
+    return db_market
