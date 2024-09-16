@@ -58,7 +58,7 @@ export default function MarketDetailScreen({ route }) {
             </ScrollView>
             {/* <Image source={route.params.img} /> */}
             <View style={styles.Footer}>
-                <CustomBtn label='연락하기' />
+                <CustomBtn label='연락하기' onPress={() => console.log('ok')} />
             </View>
         </View>
     )

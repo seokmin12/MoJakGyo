@@ -2,7 +2,7 @@ import { StyleSheet, TouchableOpacity, Text } from "react-native"
 
 export default function CustomBtn({ label, onPress }) {
     return (
-        <TouchableOpacity style={styles.Btn} onPress={() => console.log('ok')}>
+        <TouchableOpacity style={styles.Btn} onPress={onPress}>
             <Text style={styles.BtnFont}>{label}</Text>
         </TouchableOpacity>
     )

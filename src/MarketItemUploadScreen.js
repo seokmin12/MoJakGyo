@@ -34,6 +34,34 @@ export default function MarketItemUploadScreen() {
         SetItemPrice(inputText);
     }
 
+    const UploadMarket = () => {
+        if (ItemTitle == "" || ItemDesc == "" || ItemPrice == "") {
+            alert("빈칸을 채워주세요.");
+        } else {
+            var data = {
+                'name': ItemTitle,
+                'description': ItemDesc,
+                'image': "dsad",
+                'price': ItemPrice,
+                'selller_id': 1
+            }
+            try {
+                fetch("http://127.0.0.1:8000/market", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type":"application/json; charset=utf-8"
+                    },
+                    body: JSON.stringify(data)
+                }).then(res => res.json())
+                .then(res => {
+                    console.log(res);
+                })
+            } catch (e) {
+                console.log(e);
+            }
+        }
+    }
+
     return (
         <View style={styles.container}>
             <View style={styles.Header}>
@@ -79,7 +107,7 @@ export default function MarketItemUploadScreen() {
             </View>
 
             <View style={styles.Footer}>
-                <CustomBtn label="등록하기" />
+                <CustomBtn label="등록하기" onPress={UploadMarket} />
             </View>
         </View>
     )
