@@ -77,3 +77,43 @@ class MarketOut(MarketBase):
 class MarketCreate(MarketBase):
     seller_id: int
     pass
+
+
+class ChatBase(BaseModel):
+    content: str
+
+
+class Chat(ChatBase):
+    id: int
+    sender_id: int
+    receiver_id: int
+
+    class Config:
+        orm_mode = True
+
+
+class ChatOut(Chat):
+    sender: List[UserOut] = []
+    receiver: List[UserOut] = []
+
+    class Config:
+        orm_mode = True
+
+
+class ChatRoomBase(BaseModel):
+    chats: List[ChatOut] = []
+
+
+class ChatRoom(ChatRoomBase):
+    id: int
+
+    class Config:
+        orm_mode = True
+
+
+class ChatRoomOut(ChatRoom):
+    user_id: List[int] = []
+    chat_id: List[int] = []
+
+    class Config:
+        orm_mode = True

@@ -40,3 +40,24 @@ class Market(Base):
     seller = relationship('User', foreign_keys=[seller_id])
     buyer_id = Column(Integer, ForeignKey("User.id"), nullable=True)
     buyer = relationship('User', foreign_keys=[buyer_id])
+
+
+class Chat(Base):
+    __tablename__ = "Chat"
+
+    id = Column(Integer, primary_key=True, index=True)
+    content = Column(String, nullable=False)
+    sender_id = Column(Integer, ForeignKey("User.id"), nullable=False)
+    sender = relationship('User', foreign_keys=[sender_id])
+    receiver_id = Column(Integer, ForeignKey("User.id"), nullable=False)
+    receiver = relationship('User', foreign_keys=[receiver_id])
+
+
+class ChatRoom(Base):
+    __tablename__ = "ChatRoom"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(JSON, ForeignKey("User.id"), default=[])
+    users = relationship('User', foreign_keys=[user_id])
+    chat_id = Column(JSON, ForeignKey("Chat.id"), default=[])
+    chats = relationship('Chat', foreign_keys=[chat_id])
