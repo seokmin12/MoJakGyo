@@ -1,5 +1,6 @@
 from typing import List, Optional
 from pydantic import BaseModel
+from datetime import datetime
 
 
 class PostBase(BaseModel):
@@ -8,7 +9,6 @@ class PostBase(BaseModel):
 
 
 class PostCreate(PostBase):
-    writer_id: int
     pass
 
 
@@ -19,7 +19,7 @@ class PostLikeOut(BaseModel):
     liked_people: List[int] = []
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class UserBase(BaseModel):
@@ -37,7 +37,7 @@ class UserOut(UserBase):
     following: List[int] = []
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class Post(PostBase):
@@ -47,7 +47,7 @@ class Post(PostBase):
     writer: UserOut
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class MarketBase(BaseModel):
@@ -62,7 +62,7 @@ class Market(MarketBase):
     seller_id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class MarketOut(MarketBase):
@@ -71,7 +71,7 @@ class MarketOut(MarketBase):
     buyer: Optional[UserOut] = None  # Optional nested buyer information as UserOut
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class MarketCreate(MarketBase):
@@ -79,41 +79,37 @@ class MarketCreate(MarketBase):
     pass
 
 
-class ChatBase(BaseModel):
+class ChatMessageBase(BaseModel):
     content: str
 
 
-class Chat(ChatBase):
-    id: int
+class ChatMessageCreate(ChatMessageBase):
     sender_id: int
-    receiver_id: int
-
-    class Config:
-        orm_mode = True
+    room_id: int
 
 
-class ChatOut(Chat):
-    sender: List[UserOut] = []
-    receiver: List[UserOut] = []
-
-    class Config:
-        orm_mode = True
-
-
-class ChatRoomBase(BaseModel):
-    chats: List[ChatOut] = []
-
-
-class ChatRoom(ChatRoomBase):
+class ChatMessage(ChatMessageBase):
     id: int
+    timestamp: datetime
+    sender: UserOut
+    room_id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
-class ChatRoomOut(ChatRoom):
-    user_id: List[int] = []
-    chat_id: List[int] = []
+class ChatRoomCreate(BaseModel):
+    participant1_id: int
+    participant2_id: int
+
+
+class ChatRoom(BaseModel):
+    id: int
+    participant1_id: int
+    participant2_id: int
+    participant1: Optional[UserOut]
+    participant2: Optional[UserOut]
 
     class Config:
-        orm_mode = True
+        from_attributes = True
+

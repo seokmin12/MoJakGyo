@@ -79,3 +79,33 @@ def get_market(db: Session = Depends(get_db)):
 @app.post('/market/', response_model=schemas.Market)
 def create_market(market: schemas.MarketCreate, db: Session = Depends(get_db)):
     return crud.create_market(db=db, market=market)
+
+
+@app.post("/chat/rooms/", response_model=schemas.ChatRoom)
+def create_chat_room(chat_room: schemas.ChatRoomCreate, db: Session = Depends(get_db)):
+    return crud.create_chat_room(db=db, chat_room=chat_room)
+
+
+@app.get("/chat/room", response_model=List[schemas.ChatRoom])
+def get_chat_rooms(db: Session = Depends(get_db)):
+    return crud.get_chat_rooms(db=db)
+
+@app.get("/chat/rooms/{user_id}", response_model=List[schemas.ChatRoom])
+def get_user_chat_rooms(user_id: int, db: Session = Depends(get_db)):
+    return crud.get_chat_rooms_for_user(db=db, user_id=user_id)
+
+
+@app.post("/chat/messages/", response_model=schemas.ChatMessage)
+def create_chat_message(message: schemas.ChatMessageCreate, db: Session = Depends(get_db)):
+    return crud.create_message(db=db, message=message)
+
+
+@app.get("/chat/rooms/{room_id}/messages/", response_model=List[schemas.ChatMessage])
+def get_room_messages(
+    room_id: int, 
+    skip: int = 0, 
+    limit: int = 50, 
+    db: Session = Depends(get_db)
+):
+    return crud.get_messages_for_room(db=db, room_id=room_id, skip=skip, limit=limit)
+

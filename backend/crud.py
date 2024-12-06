@@ -94,3 +94,39 @@ def create_market(db: Session, market: schemas.MarketCreate):
     db.commit()
     db.refresh(db_market)
     return db_market
+
+
+def create_chat_room(db: Session, chat_room: schemas.ChatRoomCreate):
+    db_chat_room = models.ChatRoom(**chat_room.dict())
+    db.add(db_chat_room)
+    db.commit()
+    db.refresh(db_chat_room)
+    return db_chat_room
+
+
+def get_chat_rooms(db: Session):
+    return db.query(models.ChatRoom).all()
+
+
+def get_chat_rooms_for_user(db: Session, user_id: int):
+    return db.query(models.ChatRoom).filter(
+        (models.ChatRoom.participant1_id == user_id) |
+        (models.ChatRoom.participant2_id == user_id)
+    ).all()
+
+
+def create_message(db: Session, message: schemas.ChatMessageCreate):
+    db_message = models.ChatMessage(**message.dict())
+    db.add(db_message)
+    db.commit()
+    db.refresh(db_message)
+    return db_message
+
+
+def get_messages_for_room(db: Session, room_id: int, skip: int = 0, limit: int = 50):
+    return db.query(models.ChatMessage)\
+        .filter(models.ChatMessage.room_id == room_id)\
+        .order_by(models.ChatMessage.timestamp.desc())\
+        .offset(skip)\
+        .limit(limit)\
+        .all()
