@@ -3,7 +3,7 @@ import { useFonts } from 'expo-font';
 import React from 'react';
 
 import { useNavigation } from '@react-navigation/native';
-import GoBackBtn from '../components/GoBackBtn';
+import { GoBackBtn } from '../components/GoBackBtn';
 import CustomBtn from '../components/CustomBtn';
 
 const addComma = (price) => {

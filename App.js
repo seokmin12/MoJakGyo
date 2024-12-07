@@ -35,7 +35,7 @@ export default function App() {
   const GetUserInfo = async () => {
     try {
       const response = await fetch(
-        'http://127.0.0.1:8000/users/'
+        'http://127.0.0.1:8000/users'
       );
       const json = await response.json();
       

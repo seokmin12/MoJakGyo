@@ -30,7 +30,6 @@ export default function PostScreen({ route, ...props }) {
     const [IsProfileRendered, SetProfileRendered] = useState(false);
 
     const [isReady, setIsReady] = useState(false);
-    const [isLoadingReady, setIsLoadingReady] = useState(false);
 
     const [UserId, SetUserId] = useState(0);
     const LikesData = useRef({});
@@ -63,7 +62,7 @@ export default function PostScreen({ route, ...props }) {
                 SetLikes(Likes - 1);
             }
             await fetch(
-              `http://127.0.0.1:8000/posts/${post_id}/likes/${user_id}/${Is_liked}/`
+              `http://127.0.0.1:8000/posts/${post_id}/likes/${user_id}/${Is_liked}`
             , {
                 method: "PATCH"
             });
@@ -76,7 +75,7 @@ export default function PostScreen({ route, ...props }) {
 
     const GetLikes = async (post_id, user_id) => {
         try {
-            const response = await fetch(`http://127.0.0.1:8000/posts/${parseInt(post_id)}/likes/${parseInt(user_id)}/`);
+            const response = await fetch(`http://127.0.0.1:8000/posts/${parseInt(post_id)}/likes/${parseInt(user_id)}`);
             const json = await response.json();
             LikesData["current"] = json;
         } catch (e) {
@@ -92,14 +91,15 @@ export default function PostScreen({ route, ...props }) {
             })
         } catch (error) {
             console.log(error);
-        } finally {
-            setIsLoadingReady(true);
         }
 
         LikeanimatedScale.setValue(1);
         BookMarkanimatedScale.setValue(1);
         SetLikes(likes);
-        GetLikes(post_id, UserId);
+        
+        if(UserId != 0) {
+            GetLikes(post_id, UserId);
+        }
 
         setTimeout(() => {
             if (LikesData["current"]["is_liked"]) {

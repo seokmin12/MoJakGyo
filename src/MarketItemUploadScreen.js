@@ -5,7 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import { StyleSheet, View, Text, TextInput, TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
-import GoBackBtn from "./components/GoBackBtn";
+import { GoBackBtn } from "./components/GoBackBtn";
 import CustomBtn from "./components/CustomBtn";
 
 export default function MarketItemUploadScreen() {

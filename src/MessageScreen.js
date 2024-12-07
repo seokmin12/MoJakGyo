@@ -1,10 +1,15 @@
 import { StyleSheet, Text, View, Image, ScrollView } from 'react-native';
 import { useFonts } from 'expo-font';
-import React from 'react';
+import { useEffect, useRef, useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Profile from '../assets/images/DSC03437.jpg';
 
 function Message() {
+    const ChatRooms = useRef({});
+    const [UserId, SetUserId] = useState(0);
+    const [isReady, setIsReady] = useState(false);
+
     const [fontsLoaded] = useFonts({
         'BlackHanSans': require('../assets/fonts/BlackHanSans-Regular.ttf'),
     });
@@ -13,23 +18,64 @@ function Message() {
         return <StatusBar />;
     }
 
+    const getAsyncStorage = async (key) => {
+        try {
+          const json = await AsyncStorage.getItem('User');
+          if (json) {
+            const value = JSON.parse(json)[key];
+            return value;
+          }
+          return null;
+        } catch (error) {
+          console.log(`Error retrieving ${key} from AsyncStorage:`, error);
+          return null;
+        }
+    };
+
+    const getChatRoom = async (user_id) => {
+        try {
+            const response = await fetch(`http://127.0.0.1:8000/chat/rooms/${user_id}`);
+            const json = await response.json();
+            ChatRooms.current = json;
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setIsReady(true);
+        }
+    }
+    
+    useEffect(() => {
+        try {
+            getAsyncStorage("id")
+            .then((val) => {
+                SetUserId(val);
+            })
+        } catch (error) {
+            console.log(error);
+        }
+        if(UserId != 0) {
+            getChatRoom(UserId);
+        }
+    }, [UserId])
+
     const result = [];
 
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < ChatRooms.current.length; i++) {
         result.push(
             <View style={styles.MessageContainer} key={i}>
                 <View style={styles.ProfileAspect}>
                     <Image source={Profile} style={styles.ProfileImg} />
                 </View>
                 <View style={styles.MessageContent}>
-                    <Text style={styles.MessageCaller}>이석민</Text>
-                    <Text style={styles.MessageDesc} numberOfLines={1}>안녕하세요</Text>
+                    <Text style={styles.MessageCaller}>{ChatRooms.current[i]["participant2"]["name"]}</Text>
+                    <Text style={styles.MessageDesc} numberOfLines={1}>{ChatRooms.current[i]["latest_message"]["content"]}</Text>
                 </View>
             </View>
         )
     }
     return result;
 }
+
 
 export default function MessageScreen() {
     return (
