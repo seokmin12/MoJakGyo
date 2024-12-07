@@ -61,11 +61,11 @@ def update_post_likes(post_id: int, user_id: int, is_liked: bool, db: Session = 
         raise HTTPException(status_code=404, detail=str(e))
 
 
-@app.get("/posts/{post_id}/likes/{user_id}", response_model=List[schemas.PostLikeOut])
+@app.get("/posts/{post_id}/likes/{user_id}", response_model=schemas.PostLikeOut)
 def get_post_likes(post_id: int, user_id: int, db: Session = Depends(get_db)):
     try:
         liked = crud.get_likes(db=db, post_id=post_id, user_id=user_id)
-        return [liked]  # Wrap the result in a list to match the response_model
+        return liked  # Wrap the result in a list to match the response_model
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
 
