@@ -9,7 +9,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Profile from '../assets/images/DSC03437.jpg';
 import Picture from '../assets/images/DSC_0482.jpg';
 
-import { GoBackBtn } from './detail/MarketDetailScreen';
+import { GoBackBtn } from './components/GoBackBtn';
 import BottomSheetScreen from './BottomSheetScreen';
 
 function DefaultHeader(props) {
@@ -147,7 +147,7 @@ export default function ProfileScreen({ route, ...props }) {
                 GetUserPost(writer_id.current);
             }
         })
-        console.log()
+        console.log(PostData["current"])
     }, [isReady])
 
     return (

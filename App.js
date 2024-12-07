@@ -40,7 +40,6 @@ export default function App() {
       const json = await response.json();
       
       await AsyncStorage.setItem('User', JSON.stringify(json[0]));
-
     } catch (error) {
       console.log(error);
     } finally {

@@ -1,9 +1,9 @@
-import { View } from 'react-native';
+import { View, StatusBar } from 'react-native';
 import { useFonts } from 'expo-font';
 import React from 'react';
 import { useNavigation } from '@react-navigation/native';
 
-import { GoBackBtn } from './MarketDetailScreen';
+import { GoBackBtn } from '../components/GoBackBtn';
 import PostScreen from '../PostScreen';
 
 export default function PostDetailScreen({ route }) {

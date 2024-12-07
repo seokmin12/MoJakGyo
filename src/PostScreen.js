@@ -30,7 +30,9 @@ export default function PostScreen({ route, ...props }) {
     const [IsProfileRendered, SetProfileRendered] = useState(false);
 
     const [isReady, setIsReady] = useState(false);
+    const [isLoadingReady, setIsLoadingReady] = useState(false);
 
+    const [UserId, SetUserId] = useState(0);
     const LikesData = useRef({});
 
     const LikeanimatedScale = useRef(new Animated.Value(0)).current;
@@ -50,8 +52,7 @@ export default function PostScreen({ route, ...props }) {
         }
     };
 
-    const Update_Likes = async (post_id) => {
-        // console.log(getAsyncStorage("id"))
+    const Update_Likes = async (post_id, user_id) => {
         var Is_liked;
         try {
             if (IsLike == false) {
@@ -62,7 +63,7 @@ export default function PostScreen({ route, ...props }) {
                 SetLikes(Likes - 1);
             }
             await fetch(
-              `http://127.0.0.1:8000/posts/${post_id}/likes/1/${Is_liked}`
+              `http://127.0.0.1:8000/posts/${post_id}/likes/${user_id}/${Is_liked}/`
             , {
                 method: "PATCH"
             });
@@ -75,7 +76,7 @@ export default function PostScreen({ route, ...props }) {
 
     const GetLikes = async (post_id, user_id) => {
         try {
-            const response = await fetch(`http://127.0.0.1:8000/posts/${post_id}/likes/${user_id}`)
+            const response = await fetch(`http://127.0.0.1:8000/posts/${parseInt(post_id)}/likes/${parseInt(user_id)}/`);
             const json = await response.json();
             LikesData["current"] = json;
         } catch (e) {
@@ -84,21 +85,32 @@ export default function PostScreen({ route, ...props }) {
     }
 
     useEffect(() => {
+        try {
+            getAsyncStorage("id")
+            .then((val) => {
+                SetUserId(val);
+            })
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setIsLoadingReady(true);
+        }
+
         LikeanimatedScale.setValue(1);
         BookMarkanimatedScale.setValue(1);
         SetLikes(likes);
-        GetLikes(1, 1);
+        GetLikes(post_id, UserId);
 
         setTimeout(() => {
-            if (LikesData["current"][0]["is_liked"]) {
+            if (LikesData["current"]["is_liked"]) {
                 SetIsLike(true);
             }
         }, 100)
-    }, []);
+    }, [UserId])
 
     const ToggleLikes = () => {
         SetIsLike(!IsLike);
-        Update_Likes(post_id);
+        Update_Likes(post_id, UserId);
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
 
         LikeanimatedScale.setValue(0.8);
