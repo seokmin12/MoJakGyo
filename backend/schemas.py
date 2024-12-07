@@ -109,6 +109,7 @@ class ChatRoom(BaseModel):
     participant2_id: int
     participant1: Optional[UserOut]
     participant2: Optional[UserOut]
+    latest_message: Optional[ChatMessage]
 
     class Config:
         from_attributes = True

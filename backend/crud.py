@@ -105,13 +105,31 @@ def create_chat_room(db: Session, chat_room: schemas.ChatRoomCreate):
 
 
 def get_chat_rooms(db: Session):
-    return db.query(models.ChatRoom).all()
+    return db.query(models.ChatRoom).join(
+        models.ChatMessage,
+        models.ChatRoom.id == models.ChatMessage.room_id,
+        isouter=True  # Use outer join to include rooms with no messages
+    ).with_entities(
+        models.ChatRoom,
+        models.ChatMessage
+    ).order_by(
+        models.ChatMessage.timestamp.desc()
+    ).all()
 
 
 def get_chat_rooms_for_user(db: Session, user_id: int):
     return db.query(models.ChatRoom).filter(
         (models.ChatRoom.participant1_id == user_id) |
         (models.ChatRoom.participant2_id == user_id)
+    ).join(
+        models.ChatMessage,
+        models.ChatRoom.id == models.ChatMessage.room_id,
+        isouter=True  # Use outer join to include rooms with no messages
+    ).with_entities(
+        models.ChatRoom,
+        models.ChatMessage
+    ).order_by(
+        models.ChatMessage.timestamp.desc()
     ).all()
 
 
