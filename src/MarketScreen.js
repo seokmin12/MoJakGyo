@@ -37,7 +37,7 @@ export function MarketScreen({ navigation }) {
 
     const GetMarketData = async () => {
         try {
-            const response = await fetch('http://127.0.0.1:8000/market/');
+            const response = await fetch('http://127.0.0.1:8000/market');
             const json = await response.json();
 
             MarketData["current"] = json;
@@ -49,7 +49,9 @@ export function MarketScreen({ navigation }) {
     }
 
     useEffect(() => {
-        GetMarketData();
+        if(!isReady) {
+            GetMarketData();
+        }
     }, [isReady])
 
     const Product = ({ item }) => {

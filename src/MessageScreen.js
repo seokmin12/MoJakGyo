@@ -1,11 +1,13 @@
-import { StyleSheet, Text, View, Image, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity } from 'react-native';
 import { useFonts } from 'expo-font';
 import { useEffect, useRef, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
 
 import Profile from '../assets/images/DSC03437.jpg';
 
 function Message() {
+    const navigation = useNavigation();
     const ChatRooms = useRef({});
     const [UserId, SetUserId] = useState(0);
     const [isReady, setIsReady] = useState(false);
@@ -62,7 +64,9 @@ function Message() {
 
     for (let i = 0; i < ChatRooms.current.length; i++) {
         result.push(
-            <View style={styles.MessageContainer} key={i}>
+            <TouchableOpacity style={styles.MessageContainer} key={ChatRooms.current[i]["id"]} onPress={() => navigation.navigate('MessageDetailScreen', {
+                room_id: ChatRooms.current[i]["id"]
+            })}>
                 <View style={styles.ProfileAspect}>
                     <Image source={Profile} style={styles.ProfileImg} />
                 </View>
@@ -70,7 +74,7 @@ function Message() {
                     <Text style={styles.MessageCaller}>{ChatRooms.current[i]["participant2"]["name"]}</Text>
                     <Text style={styles.MessageDesc} numberOfLines={1}>{ChatRooms.current[i]["latest_message"]["content"]}</Text>
                 </View>
-            </View>
+            </TouchableOpacity>
         )
     }
     return result;

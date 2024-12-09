@@ -20,6 +20,8 @@ import PostDetailScreen from './src/detail/PostDetailScreen.js';
 import PostScreen from './src/PostScreen.js';
 import CastingDetailScreen from './src/detail/CastingDetailScreen.js';
 import NotificationScreen from './src/NotificationScreen.js';
+import MessageDetailScreen from './src/detail/MessageDetailScreen.js';
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Tab = createBottomTabNavigator();
@@ -190,6 +192,10 @@ export default function App() {
               <Stack.Screen
                 name='NotificationScreen'
                 component={NotificationScreen}
+              />
+              <Stack.Screen
+                name='MessageDetailScreen'
+                component={MessageDetailScreen}
               />
             </Stack.Group>
             <Stack.Group

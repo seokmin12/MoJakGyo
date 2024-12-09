@@ -76,8 +76,7 @@ export default function PostScreen({ route, ...props }) {
     const GetLikes = async (post_id, user_id) => {
         try {
             const response = await fetch(`http://127.0.0.1:8000/posts/${parseInt(post_id)}/likes/${parseInt(user_id)}`);
-            const json = await response.json();
-            LikesData["current"] = json;
+            LikesData["current"] = await response.json();
         } catch (e) {
             console.log(e);
         }

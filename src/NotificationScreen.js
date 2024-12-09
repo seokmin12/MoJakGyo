@@ -6,7 +6,7 @@ import Profile from '../assets/images/DSC03437.jpg';
 import Picture from '../assets/images/DSC_0482.jpg';
 
 import { useNavigation } from '@react-navigation/native';
-import GoBackBtn from './components/GoBackBtn'
+import { GoBackBtn } from './components/GoBackBtn'
 
 function Notification() {
     return (
