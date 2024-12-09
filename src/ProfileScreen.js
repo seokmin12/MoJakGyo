@@ -147,7 +147,6 @@ export default function ProfileScreen({ route, ...props }) {
                 GetUserPost(writer_id.current);
             }
         })
-        console.log(PostData["current"])
     }, [isReady])
 
     return (

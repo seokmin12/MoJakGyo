@@ -71,7 +71,7 @@ function Message() {
                     <Image source={Profile} style={styles.ProfileImg} />
                 </View>
                 <View style={styles.MessageContent}>
-                    <Text style={styles.MessageCaller}>{ChatRooms.current[i]["participant2"]["name"]}</Text>
+                    <Text style={styles.MessageCaller}>{UserId == ChatRooms.current[i]["participant1_id"] ? ChatRooms.current[i]["participant2"]["name"] : ChatRooms.current[i]["participant1"]["name"]}</Text>
                     <Text style={styles.MessageDesc} numberOfLines={1}>{ChatRooms.current[i]["latest_message"]["content"]}</Text>
                 </View>
             </TouchableOpacity>
