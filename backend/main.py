@@ -88,24 +88,12 @@ def create_chat_room(chat_room: schemas.ChatRoomCreate, db: Session = Depends(ge
 
 @app.get("/chat/rooms", response_model=List[schemas.ChatRoom])
 def get_chat_rooms(db: Session = Depends(get_db)):
-    rooms_with_messages = crud.get_chat_rooms(db=db)
-    # Process the results to include latest message
-    rooms = []
-    for room, latest_message in rooms_with_messages:
-        room.latest_message = latest_message
-        rooms.append(room)
-    return rooms
+    return crud.get_chat_rooms(db=db)
 
 
 @app.get("/chat/rooms/{user_id}", response_model=List[schemas.ChatRoom])
 def get_user_chat_rooms(user_id: int, db: Session = Depends(get_db)):
-    rooms_with_messages = crud.get_chat_rooms_for_user(db=db, user_id=user_id)
-    # Process the results to include latest message
-    rooms = []
-    for room, latest_message in rooms_with_messages:
-        room.latest_message = latest_message
-        rooms.append(room)
-    return rooms
+    return crud.get_chat_rooms_for_user(db=db, user_id=user_id)
 
 
 @app.post("/chat/messages", response_model=schemas.ChatMessage)
