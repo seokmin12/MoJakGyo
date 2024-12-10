@@ -45,6 +45,30 @@ export default function UploadScreen() {
 
     };
 
+    const UploadPost = async (image, writer_id) => {
+        try {
+            const imageName = image.split('/').pop();
+            const imageType = imageName.endsWith('.png') ? 'image/png' : 'image/jpeg';
+
+            const formData = new FormData();
+            formData.append('file', {
+                uri: image,
+                type: imageType,
+                name: imageName
+            });
+            await fetch(`http://127.0.0.1:8000/users/${writer_id}/posts`, {
+                method: "POST",
+                headers: {
+                    'Accept': 'application/json',
+                    // 'Content-Type': 'multipart/form-data',
+                },
+                body: formData,
+            })
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     useEffect(() => {
         pickImageAsync();
     }, []);
@@ -53,7 +77,13 @@ export default function UploadScreen() {
         <View style={styles.container}>
             <View style={styles.Header}>
                 <Text style={styles.Title}>새 개시물</Text>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={async () => {
+                    try {
+                        await UploadPost(selectedImage, 1)
+                    } catch (e) {
+                        console.log(e);
+                    }
+                }}>
                     <Text style={{ color: '#0070F2' }}>업로드</Text>
                 </TouchableOpacity>
             </View>

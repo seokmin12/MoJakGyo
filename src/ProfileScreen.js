@@ -81,7 +81,7 @@ export default function ProfileScreen({ route, ...props }) {
 
     const Item = ({ item }) => {
         return (
-            <TouchableOpacity style={{ width: '33.3%' }} key={item.id} onPress={() => navigation.navigate('PostDetailScreen', { post_id: item.id, writer: name.current, job: job.current, writer_id: writer_id.current, likes:item.likes })}>
+            <TouchableOpacity style={{ width: '33.3%' }} key={item.id} onPress={() => navigation.navigate('PostDetailScreen', { post_id: item.id, writer: name.current, job: job.current, writer_id: writer_id.current, likes: item.likes, ImageData: item.image })}>
                 <View style={styles.item}>
                     <Image source={{uri: `data:image/jpeg;base64,${item.image}`}} style={styles.itemdata} />
                 </View>
