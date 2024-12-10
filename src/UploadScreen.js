@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity, Pressable } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, Pressable, Alert } from 'react-native';
 import { useFonts } from 'expo-font';
 import React, { useState, useEffect } from 'react';
 
@@ -19,7 +19,7 @@ const CustomButton = ({ label, onPress }) => {
 }
 
 
-export default function UploadScreen() {
+export default function UploadScreen({ navigation }) {
     const [fontsLoaded] = useFonts({
         'BlackHanSans': require('../assets/fonts/BlackHanSans-Regular.ttf'),
     });
@@ -60,12 +60,23 @@ export default function UploadScreen() {
                 method: "POST",
                 headers: {
                     'Accept': 'application/json',
-                    // 'Content-Type': 'multipart/form-data',
                 },
                 body: formData,
             })
+            
+            Alert.alert(
+                "업로드 완료",
+                "게시물이 업로드되었습니다.",
+                [
+                    {
+                        text: "확인",
+                        onPress: () => navigation.navigate('Home')
+                    }
+                ]
+            )
         } catch (error) {
             console.log(error);
+            Alert.alert("업로드 실패", "게시물 업로드에 실패했습니다.");
         }
     }
 
