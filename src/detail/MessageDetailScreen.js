@@ -67,6 +67,29 @@ export default function MessageDetailScreen({ route }) {
         }
     }
 
+    const PostMessage = async (UserId, room_id, message) => {
+        try {
+            await fetch("http://127.0.0.1:8000/chat/messages", {
+                method: "POST",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    sender_id: UserId,
+                    room_id: room_id,
+                    content: message
+                }),
+            })
+            .then(() => {
+                GetMessages(RoomId);
+                OnChangeMessageVal("");
+            })
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     useEffect(() => {
         GetMessages(RoomId);
 
@@ -119,10 +142,11 @@ export default function MessageDetailScreen({ route }) {
                     <TextInput
                         style={styles.MessageInput}
                         onChangeText={OnChangeMessageVal}
+                        onSubmitEditing={() => PostMessage(UserId, RoomId, MessageVal)}
                         value={MessageVal}
                         placeholder='메세지 입력'
                     />
-                    <TouchableOpacity style={styles.SendBtn}>
+                    <TouchableOpacity style={styles.SendBtn} onPress={() => PostMessage(UserId, RoomId, MessageVal)}>
                         <Icon name="arrow-up" size={26} color="#fff" />
                     </TouchableOpacity>
                 </View>
