@@ -28,8 +28,8 @@ def get_posts_for_user(db: Session, writer_id: int):
     return db.query(models.Posts).filter(models.Posts.writer_id == writer_id).all()
 
 
-def create_post(db: Session, post: schemas.PostCreate, writer_id: int):
-    db_post = models.Posts(**post.dict(), writer_id=writer_id)
+def create_post(db: Session, writer_id: int, filename: str, image: str):
+    db_post = models.Posts(filename=filename, image=image, writer_id=writer_id)
     db.add(db_post)
     db.commit()
     db.refresh(db_post)

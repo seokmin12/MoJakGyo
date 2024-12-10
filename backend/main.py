@@ -1,8 +1,12 @@
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException, File, UploadFile
+from fastapi.responses import Response
 from sqlalchemy.orm import Session
 import crud, models, schemas
 from database import SessionLocal, engine
 from typing import List
+import base64
+from PIL import Image
+import io
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -38,8 +42,37 @@ def read_user(user_id: int, db: Session = Depends(get_db)):
 
 
 @app.post("/users/{writer_id}/posts", response_model=schemas.Post)
-def create_post_for_user(writer_id: int, post: schemas.PostCreate, db: Session = Depends(get_db)):
-    return crud.create_post(db=db, post=post, writer_id=writer_id)
+async def create_post_for_user(writer_id: int, file: UploadFile = File(...), db: Session = Depends(get_db)):
+    if not file.content_type.startswith('image/'):
+        raise HTTPException(status_code=400, detail="File must be an image")
+
+    try:
+        contents = await file.read()
+        
+        # Open image using PIL
+        image = Image.open(io.BytesIO(contents))
+        
+        # Convert to RGB if image is in RGBA mode
+        if image.mode == 'RGBA':
+            image = image.convert('RGB')
+            
+        # Define maximum dimensions
+        MAX_SIZE = (800, 800)  # You can adjust these dimensions
+        
+        # Resize image while maintaining aspect ratio
+        image.thumbnail(MAX_SIZE, Image.Resampling.LANCZOS)
+        
+        # Save the resized image to bytes buffer
+        buffer = io.BytesIO()
+        image.save(buffer, format='JPEG', quality=85)  # Adjust quality (0-100) as needed
+        buffer.seek(0)
+        
+        # Convert to base64
+        base64_data = base64.b64encode(buffer.getvalue()).decode('utf-8')
+
+        return crud.create_post(db=db, filename=file.filename, image=base64_data, writer_id=writer_id)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @app.get("/users/{writer_id}/posts", response_model=List[schemas.Post])

@@ -21,6 +21,7 @@ export default function PostScreen({ route, ...props }) {
     const job = props.job ?? route.params.job;
     const post_id = props.post_id ?? route.params.post_id;
     const likes = props.likes ?? route.params.likes;
+    const ImageData = props.ImageData ?? route.params.ImageData;
 
     const [IsLike, SetIsLike] = useState(false);
     const [Likes, SetLikes] = useState(0);
@@ -194,7 +195,7 @@ export default function PostScreen({ route, ...props }) {
             </View>
 
             <View style={styles.contents}>
-                {/* <Image source={Picture} style={styles.ContentsImg} /> */}
+                <Image source={{uri: `data:image/jpeg;base64,${ImageData}`}} style={styles.ContentsImg} />
             </View>
             <View style={styles.footer}>
                 <View style={styles.reaction}>

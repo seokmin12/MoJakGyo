@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
     },
 
     PageTitle: {
-        fontSize: '15rem',
+        fontSize: 15,
         fontWeight: 'bold',
     },
 
