@@ -62,11 +62,12 @@ export function MarketScreen({ navigation }) {
                 desc: item.description, 
                 image: item.image, 
                 price: item.price, 
+                image: item.image,
                 seller_id: item.seller.id 
             })}>
                 <View>
                     <View style={styles.ProductImgAspect}>
-                        <Image source={item.image} style={styles.ProductImg} />
+                        <Image source={{uri: `data:image/jpeg;base64,${item.image}`}} style={styles.ProductImg} />
                     </View>
                     <View style={styles.ProductContents}>
                         <Text style={styles.ProductPrice}>{addComma(item.price)}원</Text>
@@ -92,7 +93,7 @@ export function MarketScreen({ navigation }) {
                 }
                 numColumns={2}
                 renderItem={Product}
-                keyExtractor={(item) => item.idx}
+                keyExtractor={(item) => item.id}
             />
         </View>
     )

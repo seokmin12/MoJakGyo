@@ -74,9 +74,11 @@ class MarketOut(MarketBase):
         from_attributes = True
 
 
-class MarketCreate(MarketBase):
+class MarketCreate(BaseModel):
+    name: str
+    description: str
+    price: int
     seller_id: int
-    pass
 
 
 class ChatMessageBase(BaseModel):

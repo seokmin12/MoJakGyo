@@ -1,4 +1,4 @@
-from fastapi import Depends, FastAPI, HTTPException, File, UploadFile
+from fastapi import Depends, FastAPI, HTTPException, File, UploadFile,Form
 from fastapi.responses import Response
 from sqlalchemy.orm import Session
 import crud, models, schemas
@@ -22,6 +22,38 @@ def get_db():
         db.close()
 
 
+def image_optimizing(file):
+    if not file.content_type.startswith('image/'):
+        raise HTTPException(status_code=400, detail="File must be an image")
+
+    try:
+        contents = file.file.read()
+
+        # Open image using PIL
+        image = Image.open(io.BytesIO(contents))
+
+        # Convert to RGB if image is in RGBA mode
+        if image.mode == 'RGBA':
+            image = image.convert('RGB')
+
+        # Define maximum dimensions
+        MAX_SIZE = (800, 800)  # You can adjust these dimensions
+
+        # Resize image while maintaining aspect ratio
+        image.thumbnail(MAX_SIZE, Image.Resampling.LANCZOS)
+
+        # Save the resized image to bytes buffer
+        buffer = io.BytesIO()
+        image.save(buffer, format='JPEG', quality=85)  # Adjust quality (0-100) as needed
+        buffer.seek(0)
+
+        # Convert to base64
+        base64_data = base64.b64encode(buffer.getvalue()).decode('utf-8')
+        return file.filename, base64_data
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 @app.post("/users", response_model=schemas.UserOut)
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     return crud.create_user(db=db, user=user)
@@ -43,36 +75,8 @@ def read_user(user_id: int, db: Session = Depends(get_db)):
 
 @app.post("/users/{writer_id}/posts", response_model=schemas.Post)
 async def create_post_for_user(writer_id: int, file: UploadFile = File(...), db: Session = Depends(get_db)):
-    if not file.content_type.startswith('image/'):
-        raise HTTPException(status_code=400, detail="File must be an image")
-
-    try:
-        contents = await file.read()
-        
-        # Open image using PIL
-        image = Image.open(io.BytesIO(contents))
-        
-        # Convert to RGB if image is in RGBA mode
-        if image.mode == 'RGBA':
-            image = image.convert('RGB')
-            
-        # Define maximum dimensions
-        MAX_SIZE = (800, 800)  # You can adjust these dimensions
-        
-        # Resize image while maintaining aspect ratio
-        image.thumbnail(MAX_SIZE, Image.Resampling.LANCZOS)
-        
-        # Save the resized image to bytes buffer
-        buffer = io.BytesIO()
-        image.save(buffer, format='JPEG', quality=85)  # Adjust quality (0-100) as needed
-        buffer.seek(0)
-        
-        # Convert to base64
-        base64_data = base64.b64encode(buffer.getvalue()).decode('utf-8')
-
-        return crud.create_post(db=db, filename=file.filename, image=base64_data, writer_id=writer_id)
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+    filename, image_data = image_optimizing(file)
+    return crud.create_post(db=db, filename=filename, image=image_data, writer_id=writer_id)
 
 
 @app.get("/users/{writer_id}/posts", response_model=List[schemas.Post])
@@ -109,9 +113,10 @@ def get_market(db: Session = Depends(get_db)):
     return market
 
 
-@app.post('/market', response_model=schemas.Market)
-def create_market(market: schemas.MarketCreate, db: Session = Depends(get_db)):
-    return crud.create_market(db=db, market=market)
+@app.post('/market')
+def create_market(name: str = Form(...), description: str = Form(...), price: int = Form(...), seller_id: int = Form(...), file: UploadFile = File(...), db: Session = Depends(get_db)):
+    filename, image_data = image_optimizing(file)
+    return crud.create_market(db=db, name=name, description=description, price=price, seller_id=seller_id, image=image_data)
 
 
 @app.post("/chat/rooms", response_model=schemas.ChatRoom)

@@ -88,8 +88,8 @@ def get_market(db: Session):
     return db.query(models.Market).all()
 
 
-def create_market(db: Session, market: schemas.MarketCreate):
-    db_market = models.Market(**market.dict())
+def create_market(db: Session, name: str, description: str, price: int, seller_id: int, image: str):
+    db_market = models.Market(name=name, description=description, price=price, seller_id=seller_id, image=image)
     db.add(db_market)
     db.commit()
     db.refresh(db_market)

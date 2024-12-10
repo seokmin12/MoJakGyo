@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Image } from 'react-native';
 import { useFonts } from 'expo-font';
 import React from 'react';
 
@@ -15,7 +15,7 @@ function ProductDetail({ id, name, desc, image, price, seller_id }) {
     return (
         <View style={styles.ProductContainer}>
             <View style={styles.ProductImgAspect}>
-
+                <Image source={{uri: `data:image/jpeg;base64,${image}`}} style={styles.ProductImg}/>
             </View>
             <View style={styles.ProductSimpleContent}>
                 <Text style={styles.ProductPrice}>{addComma(price)}원</Text>
@@ -83,6 +83,14 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         borderRadius: 15,
     },
+
+    ProductImg: {
+        width: '100%',
+        height: undefined,
+        aspectRatio: 1,
+        borderRadius: 10,
+    },
+
 
     ProductSimpleContent: {
         padding: 10,
