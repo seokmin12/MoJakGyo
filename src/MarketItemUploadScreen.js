@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useFonts } from 'expo-font';
 
 import { useNavigation } from '@react-navigation/native';
 import { StyleSheet, View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import * as ImagePicker from 'expo-image-picker';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { GoBackBtn } from "./components/GoBackBtn";
 import CustomBtn from "./components/CustomBtn";
@@ -20,6 +21,7 @@ export default function MarketItemUploadScreen() {
     }
 
     const navigation = useNavigation();
+    const [UserId, SetUserId] = useState(0);
     const [ItemTitle, SetItemTitle] = useState("");
     const [ItemDesc, SetItemDesc] = useState("");
     const [ItemPrice, SetItemPrice] = useState(null);
@@ -37,6 +39,20 @@ export default function MarketItemUploadScreen() {
             // console.log(result.assets[0].base64);
         }
 
+    };
+
+    const getAsyncStorage = async (key) => {
+        try {
+          const json = await AsyncStorage.getItem('User');
+          if (json) {
+            const value = JSON.parse(json)[key];
+            return value;
+          }
+          return null;
+        } catch (error) {
+          console.log(`Error retrieving ${key} from AsyncStorage:`, error);
+          return null;
+        }
     };
 
     const onChangeItemTitle = (inputText) => {
@@ -63,7 +79,7 @@ export default function MarketItemUploadScreen() {
                 formData.append('name', ItemTitle);
                 formData.append('description', ItemDesc);
                 formData.append('price', ItemPrice);
-                formData.append('seller_id', 1);
+                formData.append('seller_id', UserId);
                 formData.append('file', {
                     uri: image,
                     type: imageType,
@@ -96,6 +112,17 @@ export default function MarketItemUploadScreen() {
             }
         }
     }
+
+    useEffect(() => {
+        try {
+            getAsyncStorage("id")
+            .then((val) => {
+                SetUserId(val);
+            })
+        } catch (error) {
+            console.log(error);
+        }
+    }, [UserId])
 
     return (
         <View style={styles.container}>
