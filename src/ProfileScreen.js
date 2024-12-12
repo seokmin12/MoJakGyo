@@ -61,8 +61,8 @@ export default function ProfileScreen({ route, ...props }) {
     const IsProfileRendered = props.IsProfileRendered ?? route.params.IsProfileRendered;
 
     const writer_id = useRef(0);
-    const name = useRef("");
-    const job = useRef("");
+    const name = useRef("")
+    const job = useRef("")
     const followers = useRef([]);
     const followings = useRef([]);
 
@@ -131,22 +131,30 @@ export default function ProfileScreen({ route, ...props }) {
     }, []);
 
     useEffect(() => {
-        AsyncStorage.getItem("User")
-        .then((value) => {
-            writer_id.current = JSON.parse(value)["id"];
-            name.current = JSON.parse(value)["name"];
-            job.current = JSON.parse(value)["job"];
-            followers.current = JSON.parse(value)["follower"];
-            followings.current = JSON.parse(value)["following"];
-        })
-        .then(res => {
-            if (!isReady && IsProfileRendered) {
-                GetStoragePost(writer_id.current);
-            }
-            else if (!isReady) {
-                GetUserPost(writer_id.current);
-            }
-        })
+        if (IsStack == false) {
+            AsyncStorage.getItem("User")
+            .then((value) => {
+                writer_id.current = JSON.parse(value)["id"];
+                name.current = JSON.parse(value)["name"];
+                job.current = JSON.parse(value)["job"];
+                followers.current = JSON.parse(value)["follower"];
+                followings.current = JSON.parse(value)["following"];
+            })
+            .then(res => {
+                if (!isReady && IsProfileRendered) {
+                    GetStoragePost(writer_id.current);
+                }
+                else if (!isReady) {
+                    GetUserPost(writer_id.current);
+                }
+            })
+        } else {
+            writer_id.current = props.writer_id ?? route.params.writer_id;
+            name.current = props.name ?? route.params.name;
+            job.current = props.job ?? route.params.job;
+
+            GetUserPost(writer_id.current);
+        }
     }, [isReady])
 
     return (
