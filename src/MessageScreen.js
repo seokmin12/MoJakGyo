@@ -4,8 +4,6 @@ import { useEffect, useRef, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 
-import Profile from '../assets/images/DSC03437.jpg';
-
 function Message() {
     const navigation = useNavigation();
     const ChatRooms = useRef({});
@@ -64,16 +62,35 @@ function Message() {
 
     for (let i = 0; i < ChatRooms.current.length; i++) {
         result.push(
-            <TouchableOpacity style={styles.MessageContainer} key={ChatRooms.current[i]["id"]} onPress={() => navigation.navigate('MessageDetailScreen', {
-                room_id: ChatRooms.current[i]["id"],
-                participant: UserId == ChatRooms.current[i]["participant1_id"] ? ChatRooms.current[i]["participant2"]["name"] : ChatRooms.current[i]["participant1"]["name"]
+            <TouchableOpacity 
+                style={styles.MessageContainer}
+                key={ChatRooms.current[i]["id"]} 
+                onPress={() => navigation.navigate('MessageDetailScreen', {
+                    room_id: ChatRooms.current[i]["id"],
+
+                    participant: UserId == ChatRooms.current[i]["participant1_id"] ? 
+                    ChatRooms.current[i]["participant2"]["name"] 
+                    : ChatRooms.current[i]["participant1"]["name"],
+
+                    profile_img: UserId == ChatRooms.current[i]["participant1_id"] ?
+                    ChatRooms.current[i]["participant2"]["profile_img"]
+                    : ChatRooms.current[i]["participant1"]["profile_img"],
             })}>
                 <View style={styles.ProfileAspect}>
-                    <Image source={Profile} style={styles.ProfileImg} />
+                    <Image 
+                        source={UserId == ChatRooms.current[i]["participant1_id"] ? 
+                        {uri: `data:image/jpeg;base64,${ChatRooms.current[i]["participant2"]["profile_img"]}`} 
+                        : {uri: `data:image/jpeg;base64,${ChatRooms.current[i]["participant1"]["profile_img"]}`}}
+                        style={styles.ProfileImg} 
+                    />
                 </View>
                 <View style={styles.MessageContent}>
                     <Text style={styles.MessageCaller}>{UserId == ChatRooms.current[i]["participant1_id"] ? ChatRooms.current[i]["participant2"]["name"] : ChatRooms.current[i]["participant1"]["name"]}</Text>
-                    <Text style={styles.MessageDesc} numberOfLines={1}>{ChatRooms.current[i]["latest_message"]["content"]}</Text>
+                    <Text style={styles.MessageDesc} numberOfLines={1}>
+                        {ChatRooms.current[i]["latest_message"] != null && (
+                            ChatRooms.current[i]["latest_message"]["content"]
+                        )}
+                    </Text>
                 </View>
             </TouchableOpacity>
         )

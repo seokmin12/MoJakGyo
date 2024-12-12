@@ -6,9 +6,6 @@ import { useEffect, useState, useCallback, useRef } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import Profile from '../assets/images/DSC03437.jpg';
-import Picture from '../assets/images/DSC_0482.jpg';
-
 import { GoBackBtn } from './components/GoBackBtn';
 import BottomSheetScreen from './BottomSheetScreen';
 
@@ -65,6 +62,7 @@ export default function ProfileScreen({ route, ...props }) {
     const job = useRef("")
     const followers = useRef([]);
     const followings = useRef([]);
+    const profile_img = useRef("");
 
     const PostData = useRef({});
     const [isReady, setIsReady] = useState(false);
@@ -81,7 +79,14 @@ export default function ProfileScreen({ route, ...props }) {
 
     const Item = ({ item }) => {
         return (
-            <TouchableOpacity style={{ width: '33.3%' }} key={item.id} onPress={() => navigation.navigate('PostDetailScreen', { post_id: item.id, writer: name.current, job: job.current, writer_id: writer_id.current, likes: item.likes, ImageData: item.image })}>
+            <TouchableOpacity style={{ width: '33.3%' }} key={item.id} onPress={() => navigation.navigate('PostDetailScreen', { 
+                post_id: item.id, 
+                writer: name.current, 
+                job: job.current,
+                writer_id: writer_id.current, 
+                profile_img: profile_img.current,
+                likes: item.likes, 
+                ImageData: item.image })}>
                 <View style={styles.item}>
                     <Image source={{uri: `data:image/jpeg;base64,${item.image}`}} style={styles.itemdata} />
                 </View>
@@ -139,6 +144,7 @@ export default function ProfileScreen({ route, ...props }) {
                 job.current = JSON.parse(value)["job"];
                 followers.current = JSON.parse(value)["follower"];
                 followings.current = JSON.parse(value)["following"];
+                profile_img.current = JSON.parse(value)["profile_img"];
             })
             .then(res => {
                 if (!isReady && IsProfileRendered) {
@@ -152,6 +158,7 @@ export default function ProfileScreen({ route, ...props }) {
             writer_id.current = props.writer_id ?? route.params.writer_id;
             name.current = props.name ?? route.params.name;
             job.current = props.job ?? route.params.job;
+            profile_img.current = props.profile_img ?? route.params.profile_img;
 
             GetUserPost(writer_id.current);
         }
@@ -167,7 +174,7 @@ export default function ProfileScreen({ route, ...props }) {
 
             <View style={styles.Profile}>
                 <View style={styles.ProfileAspect}>
-                    <Image source={Profile} style={styles.ProfileImage} />
+                    <Image source={{uri: `data:image/jpeg;base64,${profile_img.current}`}} style={styles.ProfileImage} />
                 </View>
                 <Text style={styles.ProfileName}>{name.current}</Text>
                 <View style={styles.follow}>

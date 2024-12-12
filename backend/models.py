@@ -39,7 +39,7 @@ class User(Base):
     job = Column(String, nullable=False)
     follower = Column(JSON, default=[])
     following = Column(JSON, default=[])
-    # profile_img = Column(String, nullable=False)
+    profile_img = Column(String, nullable=False)
 
     posts = relationship('Posts', back_populates='writer')
 

@@ -2,9 +2,6 @@ import { StyleSheet, Text, View, Image, TouchableOpacity, Animated, Pressable } 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useState, useRef, useEffect } from 'react';
 
-import Profile from '../assets/images/DSC03437.jpg';
-import Picture from '../assets/images/DSC_0482.jpg';
-
 import { useNavigation } from '@react-navigation/native';
 import * as Haptics from 'expo-haptics';
 
@@ -19,6 +16,7 @@ export default function PostScreen({ route, ...props }) {
     const writer_id = props.writer_id ?? route.params.writer_id;
     const writer = props.writer ?? route.params.writer;
     const job = props.job ?? route.params.job;
+    const profile_img = props.profile_img ?? route.params.profile_img;
     const post_id = props.post_id ?? route.params.post_id;
     const likes = props.likes ?? route.params.likes;
     const ImageData = props.ImageData ?? route.params.ImageData;
@@ -149,14 +147,18 @@ export default function PostScreen({ route, ...props }) {
                     onPress={
                         () => {
                             navigation.navigate('ProfileScreen', {
-                                writer_id: writer_id, name: writer, job: job, IsProfileRendered: IsProfileRendered
+                                writer_id: writer_id, 
+                                name: writer, 
+                                job: job, 
+                                profile_img: profile_img,
+                                IsProfileRendered: IsProfileRendered
                             })
                             SetProfileRendered(true);
                         }
                     }
                 >
                     <View style={styles.ProfileAspect}>
-                        <Image source={Profile} style={styles.profile} />
+                        <Image source={{uri: `data:image/jpeg;base64,${profile_img}`}} style={styles.profile} />
                     </View>
                     <Text style={styles.font}>{writer}</Text>
                 </Pressable>
@@ -205,12 +207,18 @@ export default function PostScreen({ route, ...props }) {
                             <Text style={{ fontSize: 10 }}>{Likes}</Text>
                         </TouchableOpacity>
                     </Animated.View>
-                    <View style={{ alignItems: 'center' }}>
-                        <TouchableOpacity style={{ alignItems: 'center' }} onPress={() => navigation.navigate('CastingDetailScreen')}>
-                            <Icon name='camera-plus-outline' size={25} />
-                            <Text style={{ fontSize: 10 }}>촬영하기</Text>
-                        </TouchableOpacity>
-                    </View>
+                    {UserId != writer_id && (
+                        <View style={{ alignItems: 'center' }}>
+                            <TouchableOpacity style={{ alignItems: 'center' }} onPress={() => navigation.navigate('CastingDetailScreen', {
+                                writer_id: writer_id,
+                                writer: writer,
+                                writer_profile_img: profile_img,
+                            })}>
+                                <Icon name='camera-plus-outline' size={25} />
+                                <Text style={{ fontSize: 10 }}>촬영하기</Text>
+                            </TouchableOpacity>
+                        </View>
+                    )}
                 </View>
                 <Animated.View style={{ transform: [{ scale: BookMarkanimatedScale }] }}>
                     <TouchableOpacity onPress={() => ToggleBookMark()}>

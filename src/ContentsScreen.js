@@ -65,7 +65,7 @@ export default function ContentsScreen() {
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
-        renderItem={({ item }) => <PostScreen writer_id={item.writer.id} writer={item.writer.name} job={item.writer.job} post_id={item.id} likes={item.likes} ImageData={item.image} />}
+        renderItem={({ item }) => <PostScreen writer_id={item.writer.id} writer={item.writer.name} job={item.writer.job} profile_img={item.writer.profile_img} post_id={item.id} likes={item.likes} ImageData={item.image} />}
         keyExtractor={(item) => item.id}
       />
     </View>

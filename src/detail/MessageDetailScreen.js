@@ -4,8 +4,6 @@ import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import Profile from '../../assets/images/DSC03437.jpg';
-
 import { GoBackBtn } from '../components/GoBackBtn';
 
 const TimeFormat = (datetime) => {
@@ -55,6 +53,7 @@ export default function MessageDetailScreen({ route }) {
     const [MessageVal, OnChangeMessageVal] = useState("");
     const RoomId = route.params.room_id;
     const Participant = route.params.participant;
+    const ProfileImg = route.params.profile_img;
     const [UserId, SetUserId] = useState(0);
     const [messages, setMessages] = useState({});
 
@@ -149,7 +148,7 @@ export default function MessageDetailScreen({ route }) {
                             return (
                                 <Chat 
                                     key={key}
-                                    image={Profile}
+                                    image={{uri: `data:image/jpeg;base64,${ProfileImg}`}}
                                     content={message.content}
                                     sender={message.sender.name}
                                     time={message.timestamp}

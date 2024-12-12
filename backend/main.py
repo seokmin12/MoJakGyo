@@ -1,4 +1,4 @@
-from fastapi import Depends, FastAPI, HTTPException, File, UploadFile,Form
+from fastapi import Depends, FastAPI, HTTPException, File, UploadFile, Form
 from fastapi.responses import Response
 from sqlalchemy.orm import Session
 import crud, models, schemas
@@ -55,8 +55,9 @@ def image_optimizing(file):
 
 
 @app.post("/users", response_model=schemas.UserOut)
-def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
-    return crud.create_user(db=db, user=user)
+def create_user(name: str = Form(...), job: str = Form(...), file: UploadFile = File(...), db: Session = Depends(get_db)):
+    filename, image_data = image_optimizing(file)
+    return crud.create_user(db=db, name=name, job=job, image=image_data)
 
 
 @app.get("/users", response_model=List[schemas.UserOut])

@@ -4,8 +4,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import React, { useState, useRef, useEffect } from 'react';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Postcode from '@actbase/react-daum-postcode';
-
-import Profile from '../../assets/images/DSC03437.jpg';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const fontScale = PixelRatio.getFontScale();
 const getFontSize = (size) => {
@@ -51,7 +50,7 @@ const formatDate = (date) => {
     return `${date.getFullYear()}년 ${Add0((date.getMonth() + 1).toString())}월 ${Add0((date.getDate()).toString())}일`;
 };
 
-export default function CastingDetailScreen() {
+export default function CastingDetailScreen({ route }) {
     const [fontsLoaded] = useFonts({
         'BlackHanSans': require('../../assets/fonts/BlackHanSans-Regular.ttf'),
     });
@@ -61,10 +60,17 @@ export default function CastingDetailScreen() {
     }
 
     const BriefcaseStartVal = useRef(new Animated.Value(0)).current;
+    const ChkBoxanimatedScale = useRef(new Animated.Value(0)).current;
     const BriefcaseEndVal = 50;
     const duration = 2000;
 
-    const ChkBoxanimatedScale = useRef(new Animated.Value(0)).current;
+    const writer_id = route.params.writer_id;
+    const writer = route.params.writer;
+    const writer_profile_img = route.params.writer_profile_img;
+    const [UserId, SetUserId] = useState(0);
+    const [UserName, SetUserName] = useState("");
+    const [UserProfileImg, SetUserProfileImg] = useState("");
+
 
     const BriefCaseAni = () => {
         BriefcaseStartVal.setValue(-50);
@@ -89,10 +95,42 @@ export default function CastingDetailScreen() {
         }).start();
     }
 
+    const getAsyncStorage = async (key) => {
+        try {
+          const json = await AsyncStorage.getItem('User');
+          if (json) {
+            const value = JSON.parse(json)[key];
+            return value;
+          }
+          return null;
+        } catch (error) {
+          console.log(`Error retrieving ${key} from AsyncStorage:`, error);
+          return null;
+        }
+    };
+
     useEffect(() => {
-        BriefCaseAni();
-        ChkBoxanimatedScale.setValue(1);
-    }, [])
+        try {
+            getAsyncStorage("id")
+            .then((val) => {
+                SetUserId(val);
+            })
+            getAsyncStorage("name")
+            .then((val) => {
+                SetUserName(val);
+            })
+            getAsyncStorage("profile_img")
+            .then((val) => {
+                SetUserProfileImg(val);
+            })
+        } catch (error) {
+            console.log(error)
+        }
+        if(UserId != 0 && UserName != "", UserProfileImg != "") {
+            BriefCaseAni();
+            ChkBoxanimatedScale.setValue(1);
+        }
+    }, [UserId])
 
     const offset = 1000 * 60 * 60 * 9;
 
@@ -148,18 +186,18 @@ export default function CastingDetailScreen() {
                         <View style={styles.Icons}>
                             <View style={styles.Profile}>
                                 <View style={styles.Aspect}>
-                                    <Image source={Profile} style={styles.ProfileImg} />
+                                    <Image source={{uri: `data:image/jpeg;base64,${UserProfileImg}`}} style={styles.ProfileImg} />
                                 </View>
-                                <Text>이석민</Text>
+                                <Text>{UserName}</Text>
                             </View>
                             <Animated.View style={{ transform: [{ translateX: BriefcaseStartVal, }] }}>
                                 <Icon name='briefcase-outline' size={31} />
                             </Animated.View>
                             <View style={styles.Profile}>
                                 <View style={styles.Aspect}>
-                                    <Image source={Profile} style={styles.ProfileImg} />
+                                    <Image source={{uri: `data:image/jpeg;base64,${writer_profile_img}`}} style={styles.ProfileImg} />
                                 </View>
-                                <Text>이석민</Text>
+                                <Text>{writer}</Text>
                             </View>
                         </View>
                     </View>

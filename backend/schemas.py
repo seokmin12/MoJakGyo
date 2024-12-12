@@ -28,6 +28,7 @@ class UserBase(BaseModel):
 
 
 class UserCreate(UserBase):
+    profile_img: str
     pass
 
 
@@ -35,6 +36,7 @@ class UserOut(UserBase):
     id: int
     follower: List[int] = []
     following: List[int] = []
+    profile_img: str
 
     class Config:
         from_attributes = True
@@ -111,7 +113,7 @@ class ChatRoom(BaseModel):
     participant2_id: int
     participant1: Optional[UserOut]
     participant2: Optional[UserOut]
-    latest_message: Optional[ChatMessage]
+    latest_message: Optional[ChatMessage] = None
 
     class Config:
         from_attributes = True

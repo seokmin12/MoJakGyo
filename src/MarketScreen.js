@@ -5,8 +5,6 @@ import React, { useRef, useEffect, useState } from 'react';
 
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import ProductImg from '../assets/images/DSC_0482.jpg';
-
 import MarketDetailScreen from './detail/MarketDetailScreen';
 import MarketItemUploadScreen from './MarketItemUploadScreen';
 
