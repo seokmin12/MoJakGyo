@@ -1,8 +1,10 @@
-import { StyleSheet, View, TextInput, Text, TouchableOpacity, KeyboardAvoidingView, TouchableWithoutFeedback, NativeModules, Keyboard, Platform } from 'react-native';
+import { StyleSheet, View, TextInput, Text, TouchableOpacity, KeyboardAvoidingView, TouchableWithoutFeedback, NativeModules, Keyboard, Platform, Image } from 'react-native';
 import { useState, useEffect, useRef } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+
+import Profile from '../../assets/images/DSC03437.jpg';
 
 import { GoBackBtn } from '../components/GoBackBtn';
 
@@ -21,15 +23,29 @@ const TimeFormat = (datetime) => {
     return ampm + " " + hour + ":" + min;
 }
 
-const Chat = ({ content, time, direction }) => {
+const Chat = ({ image, sender, content, time, direction }) => {
     return (
         <View style={[ChatStyles.container, direction === 'right' ? {flexDirection: 'row'} : {flexDirection: 'row-reverse'}]}>
-            <View style={ChatStyles.ChatTimeContainer}>
-                <Text style={ChatStyles.ChatTime}>{TimeFormat(time)}</Text>
+            <View style={ChatStyles.Contents}>
+                {direction === 'left' && (
+                    <View style={direction === 'right' ? {alignSelf: 'flex-end'} : {alignSelf: 'flex-start'}}>
+                        <Text>{sender}</Text>
+                    </View>
+                )}
+                <View style={[ChatStyles.ContentsFooter, direction === 'right' ? {flexDirection: 'row-reverse'} : {flexDirection: 'row'}]}>
+                    <View style={ChatStyles.ChatContentContainer}>
+                        <Text>{content}</Text>
+                    </View>
+                    <View style={ChatStyles.ChatTimeContainer}>
+                        <Text style={ChatStyles.ChatTime}>{TimeFormat(time)}</Text>
+                    </View>
+                </View>
             </View>
-            <View style={ChatStyles.ChatContentContainer}>
-                <Text>{content}</Text>
-            </View>
+            {direction === 'left' && (
+                <View style={ChatStyles.ProfileAspect}>
+                    <Image source={image} style={ChatStyles.ProfileImg} />
+                </View>
+            )}
         </View>
     )
 }
@@ -38,6 +54,7 @@ export default function MessageDetailScreen({ route }) {
     const navigation = useNavigation();
     const [MessageVal, OnChangeMessageVal] = useState("");
     const RoomId = route.params.room_id;
+    const Participant = route.params.participant;
     const [UserId, SetUserId] = useState(0);
     const [messages, setMessages] = useState({});
 
@@ -120,6 +137,8 @@ export default function MessageDetailScreen({ route }) {
             >
                 <View style={styles.Header}>
                     <GoBackBtn onPress={() => navigation.goBack()} />
+                    <Text style={{ fontWeight: 'bold', fontSize: 16, }}>{Participant}</Text>
+                    <GoBackBtn disabled={true} opacity={0} />
                 </View>
                 <View style={styles.ContentContainer}> 
                     {
@@ -130,7 +149,9 @@ export default function MessageDetailScreen({ route }) {
                             return (
                                 <Chat 
                                     key={key}
+                                    image={Profile}
                                     content={message.content}
+                                    sender={message.sender.name}
                                     time={message.timestamp}
                                     direction={message.sender.id === UserId ? 'right' : 'left'} 
                                 />
@@ -159,6 +180,13 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#fff',
+    },
+
+    Header: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
     },
 
     ContentContainer: {
@@ -197,6 +225,18 @@ const ChatStyles = StyleSheet.create({
         display: 'flex',
         justifyContent: 'flex-end',
         gap: 5,
+        flexDirection: 'row',
+    },
+
+    Contents: {
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 5,
+    },
+
+    ContentsFooter: {
+        display: 'flex',
+        gap: 5,
     },
 
     ChatTimeContainer: {
@@ -211,5 +251,20 @@ const ChatStyles = StyleSheet.create({
         backgroundColor: '#ccc',
         padding: 10,
         borderRadius: 10,
-    }
+    },
+
+    ProfileAspect: {
+        width: '13%',
+        height: undefined,
+        aspectRatio: 1,
+        borderRadius: 1000,
+        backgroundColor: '#ccc',
+    },
+
+    ProfileImg: {
+        width: '100%',
+        height: undefined,
+        aspectRatio: 1,
+        borderRadius: 1000,
+    },
 })

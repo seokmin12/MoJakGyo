@@ -65,7 +65,8 @@ function Message() {
     for (let i = 0; i < ChatRooms.current.length; i++) {
         result.push(
             <TouchableOpacity style={styles.MessageContainer} key={ChatRooms.current[i]["id"]} onPress={() => navigation.navigate('MessageDetailScreen', {
-                room_id: ChatRooms.current[i]["id"]
+                room_id: ChatRooms.current[i]["id"],
+                participant: UserId == ChatRooms.current[i]["participant1_id"] ? ChatRooms.current[i]["participant2"]["name"] : ChatRooms.current[i]["participant1"]["name"]
             })}>
                 <View style={styles.ProfileAspect}>
                     <Image source={Profile} style={styles.ProfileImg} />
