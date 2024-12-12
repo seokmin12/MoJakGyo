@@ -25,6 +25,7 @@ export function MarketScreen({ navigation }) {
 
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
+        GetMarketData();
         setTimeout(() => {
             setRefreshing(false);
         }, 2000);

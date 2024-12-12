@@ -4,10 +4,10 @@ import React, { useState, useEffect } from 'react';
 
 import * as ImagePicker from 'expo-image-picker';
 
-export function ImageViewer({ selectedImage }) {
+export function ImageViewer({ selectedImage, style }) {
     const imageSource = { uri: selectedImage }
 
-    return <Image source={imageSource} style={styles.image} />;
+    return <Image source={imageSource} style={style} />;
 }
 
 const CustomButton = ({ label, onPress }) => {
@@ -46,37 +46,41 @@ export default function UploadScreen({ navigation }) {
     };
 
     const UploadPost = async (image, writer_id) => {
-        try {
-            const imageName = image.split('/').pop();
-            const imageType = imageName.endsWith('.png') ? 'image/png' : 'image/jpeg';
-
-            const formData = new FormData();
-            formData.append('file', {
-                uri: image,
-                type: imageType,
-                name: imageName
-            });
-            await fetch(`http://127.0.0.1:8000/users/${writer_id}/posts`, {
-                method: "POST",
-                headers: {
-                    'Accept': 'application/json',
-                },
-                body: formData,
-            })
-            
-            Alert.alert(
-                "업로드 완료",
-                "게시물이 업로드되었습니다.",
-                [
-                    {
-                        text: "확인",
-                        onPress: () => navigation.navigate('Home')
-                    }
-                ]
-            )
-        } catch (error) {
-            console.log(error);
-            Alert.alert("업로드 실패", "게시물 업로드에 실패했습니다.");
+        if (selectedImage != null) {
+            try {
+                const imageName = image.split('/').pop();
+                const imageType = imageName.endsWith('.png') ? 'image/png' : 'image/jpeg';
+    
+                const formData = new FormData();
+                formData.append('file', {
+                    uri: image,
+                    type: imageType,
+                    name: imageName
+                });
+                await fetch(`http://127.0.0.1:8000/users/${writer_id}/posts`, {
+                    method: "POST",
+                    headers: {
+                        'Accept': 'application/json',
+                    },
+                    body: formData,
+                })
+                
+                Alert.alert(
+                    "업로드 완료",
+                    "게시물이 업로드되었습니다.",
+                    [
+                        {
+                            text: "확인",
+                            onPress: () => navigation.navigate('Home')
+                        }
+                    ]
+                )
+            } catch (error) {
+                console.log(error);
+                Alert.alert("업로드 실패", "게시물 업로드에 실패했습니다.");
+            }
+        } else {
+            Alert.alert("업로드 실패", "이미지를 선택해주세요.");
         }
     }
 
@@ -101,6 +105,7 @@ export default function UploadScreen({ navigation }) {
             <View style={styles.CurrentImgAspect}>
                 <ImageViewer
                     selectedImage={selectedImage}
+                    style={styles.image}
                 />
             </View>
             <View style={styles.ButtonView}>
