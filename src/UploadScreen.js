@@ -3,6 +3,7 @@ import { useFonts } from 'expo-font';
 import React, { useState, useEffect } from 'react';
 
 import * as ImagePicker from 'expo-image-picker';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export function ImageViewer({ selectedImage, style }) {
     const imageSource = { uri: selectedImage }
@@ -30,6 +31,7 @@ export default function UploadScreen({ navigation }) {
 
     const [permission, requestPermission] = ImagePicker.useMediaLibraryPermissions();
     const [selectedImage, setSelectedImage] = useState(null);
+    const [UserId, SetUserId] = useState(0);
 
     const pickImageAsync = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -43,6 +45,20 @@ export default function UploadScreen({ navigation }) {
             // console.log(result.assets[0].base64);
         }
 
+    };
+
+    const getAsyncStorage = async (key) => {
+        try {
+          const json = await AsyncStorage.getItem('User');
+          if (json) {
+            const value = JSON.parse(json)[key];
+            return value;
+          }
+          return null;
+        } catch (error) {
+          console.log(`Error retrieving ${key} from AsyncStorage:`, error);
+          return null;
+        }
     };
 
     const UploadPost = async (image, writer_id) => {
@@ -85,8 +101,18 @@ export default function UploadScreen({ navigation }) {
     }
 
     useEffect(() => {
-        pickImageAsync();
-    }, []);
+        try {
+            getAsyncStorage("id")
+            .then((val) => {
+                SetUserId(val);
+            })
+        } catch (error) {
+            console.log(error);
+        }
+        if (UserId != 0) {
+            pickImageAsync();
+        }
+    }, [UserId]);
 
     return (
         <View style={styles.container}>
@@ -94,7 +120,7 @@ export default function UploadScreen({ navigation }) {
                 <Text style={styles.Title}>새 개시물</Text>
                 <TouchableOpacity onPress={async () => {
                     try {
-                        await UploadPost(selectedImage, 1)
+                        await UploadPost(selectedImage, UserId);
                     } catch (e) {
                         console.log(e);
                     }
