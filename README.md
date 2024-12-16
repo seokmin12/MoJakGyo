@@ -28,7 +28,7 @@
 사진 작가들 또한 자신의 포트폴리오에 사용할 인물 사진의 모델을 섭외할 수 있는 방법이 많지 않았습니다. <br>
 이러한 문제점을 인식해 사진 작가는 자신이 찍었었던 사진들을 업로드하여 모델의 취향에 맞는 작가를 섭외할 수 있도록하고 모델은 자신의 프로필 사진이나 얼굴 사진들을 업로드하여 작가들이 모델을 더욱 쉽게 섭외할 수 있도록 하였습니다.
 
-## Getting Started 📌
+## Getting Started 🚀
 1. Install expo
 ```
 npm install expo
@@ -38,7 +38,11 @@ npm install expo
 npm start
 ```
 
-## Structure 📌
+## ScreenShot 📸
+![AppScreenShot](./assets/images/AppScreenShot.png)
+![BackendScreenShot](./assets/images/BackendScreenShot.png)
+
+<!-- ## Structure 📌
 ```
 ├── src/
 │   ├── detail/
@@ -58,4 +62,4 @@ npm start
 ├── assets/
 ├── package.json
 └── ...
-```
+``` -->

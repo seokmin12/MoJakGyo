@@ -39,3 +39,6 @@ backend/venv
 
 # python __pycache__
 backend/__pycache__
+
+# ios build
+ios/
