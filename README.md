@@ -37,6 +37,15 @@ npm install expo
 ```
 npm start
 ```
+3. Install dependencies
+```
+cd backend
+pip install -r requirements.txt
+```
+4. Run backend
+```
+uvicorn main:app
+```
 
 ## ScreenShot 📸
 ![AppScreenShot](./assets/images/AppScreenShot.png)
